@@ -5,9 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const anomaliaSelect = document.getElementById("anomalia");
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
-    const motivoDañoSelect = document.getElementById("motivoDaño");
-    const otroMotivoContainer = document.getElementById("otroMotivoContainer");
-    const otroMotivoInput = document.getElementById("otroMotivo");
 
     // Lista de referencias disponibles
     const referenciasLista = [
@@ -59,29 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Habilita o deshabilita la descripción de anomalía
-  anomaliaSelect.addEventListener("change", function () {
-    if (anomaliaSelect.value === "Sí") {
-        descripcionAnomalia.removeAttribute("disabled"); // Habilita el campo
-    } else {
-        descripcionAnomalia.setAttribute("disabled", "true"); // Deshabilita el campo
-        descripcionAnomalia.value = ""; // Limpia el campo cuando se deshabilita
-    }
-});
-
-
-        }
-    });
-
-    // Habilita o deshabilita el campo de "Otro" en motivo de daño
-    motivoDañoSelect.addEventListener("change", function () {
-        if (motivoDañoSelect.value === "Otro") {
-            otroMotivoContainer.style.display = "block";
-            otroMotivoInput.required = true;
-        } else {
-            otroMotivoContainer.style.display = "none";
-            otroMotivoInput.required = false;
-            otroMotivoInput.value = ""; // Limpia el campo si no es "Otro"
-        }
+    anomaliaSelect.addEventListener("change", function () {
+        descripcionAnomalia.disabled = anomaliaSelect.value === "No";
     });
 
     // Envío del formulario
@@ -91,12 +67,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const fecha = document.getElementById("Fecha").value;
         const operario = document.getElementById("operario").value;
         const empaquesDañados = document.getElementById("empaquesDañados").value;
-        const motivoDaño = motivoDañoSelect.value;
-        const anomalia = anomaliaSelect.value;
-        const descripcionAnomaliaTexto = descripcionAnomalia.value;
-
-        // Si se elige "Otro", usar el texto ingresado, si no, usar la opción seleccionada
-        const motivoFinal = motivoDaño === "Otro" ? otroMotivoInput.value : motivoDaño;
+        const motivoDaño = document.getElementById("motivoDaño").value;
+        const anomalia = document.getElementById("anomalia").value;
+        const descripcionAnomalia = document.getElementById("descripcionAnomalia").value;
 
         let referencias = [];
         let cantidades = [];
@@ -112,9 +85,9 @@ document.addEventListener("DOMContentLoaded", function () {
             referencias,
             cantidades,
             empaquesDañados,
-            motivoDaño: motivoFinal,
+            motivoDaño,
             anomalia,
-            descripcionAnomalia: anomalia === "Otro" ? descripcionAnomaliaTexto : ""
+            descripcionAnomalia
         };
 
         console.log("Datos a enviar:", data); // Debug para verificar los datos antes de enviar
@@ -131,8 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-            descripcionAnomalia.style.display = "none"; // Ocultar nuevamente el campo "Otro" después del envío
-            otroMotivoContainer.style.display = "none"; // Ocultar el campo "Otro" de motivo de daño
         })
         .catch(error => console.error("Error:", error));
     });

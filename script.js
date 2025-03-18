@@ -59,14 +59,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Habilita o deshabilita la descripción de anomalía
-    anomaliaSelect.addEventListener("change", function () {
+  anomaliaSelect.addEventListener("change", function () {
     if (anomaliaSelect.value === "Sí") {
-        descripcionAnomalia.disabled = false; // Habilita el campo
+        descripcionAnomalia.removeAttribute("disabled"); // Habilita el campo
     } else {
-        descripcionAnomalia.disabled = true;  // Deshabilita el campo si es "No"
-        descripcionAnomalia.value = "";  // Limpia el campo cuando está deshabilitado
+        descripcionAnomalia.setAttribute("disabled", "true"); // Deshabilita el campo
+        descripcionAnomalia.value = ""; // Limpia el campo cuando se deshabilita
     }
 });
+
 
         }
     });

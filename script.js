@@ -68,6 +68,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const operario = document.getElementById("operario").value;
         const empaquesDañados = document.getElementById("empaquesDañados").value;
         const motivoDaño = document.getElementById("motivoDaño").value;
+        const motivoDaño = document.getElementById("motivoDaño").value;
+        const otroMotivo = document.getElementById("otroMotivo").value;
+
+        const motivoFinal = motivoDaño === "Otro" ? otroMotivo : motivoDaño;  // Guardar la opción seleccionada
+
+        const data = {
+            fecha,
+            operario,
+            referencias,
+            cantidades,
+            empaquesDañados,
+            motivoDaño: motivoFinal,  // Aquí se almacena correctamente
+            anomalia,
+            descripcionAnomalia
+};
+
         const anomalia = document.getElementById("anomalia").value;
         const descripcionAnomalia = document.getElementById("descripcionAnomalia").value;
 
@@ -106,5 +122,21 @@ document.addEventListener("DOMContentLoaded", function () {
             referenciasContainer.innerHTML = "";
         })
         .catch(error => console.error("Error:", error));
+    });
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const motivoDañoSelect = document.getElementById("motivoDaño");
+    const otroMotivoContainer = document.getElementById("otroMotivoContainer");
+    const otroMotivoInput = document.getElementById("otroMotivo");
+
+    motivoDañoSelect.addEventListener("change", function () {
+        if (motivoDañoSelect.value === "Otro") {
+            otroMotivoContainer.style.display = "block";
+            otroMotivoInput.required = true;
+        } else {
+            otroMotivoContainer.style.display = "none";
+            otroMotivoInput.required = false;
+            otroMotivoInput.value = "";  // Limpiar el campo si no es "Otro"
+        }
     });
 });

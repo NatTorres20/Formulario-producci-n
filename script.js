@@ -146,8 +146,15 @@ document.addEventListener("DOMContentLoaded", function () {
             operario,
             referencias,
             cantidades,
-            empaquesDañados,
-            motivoDaño,
+            empaquesDañados: {
+                Burbuja: burbujaCantidad,
+                Roto: rotoCantidad,
+                Crudo: crudoCantidad,
+                Quemado: quemadoCantidad,
+                Otro: otroCantidad
+  }
+};
+
             anomalia,
             descripcionAnomalia
         };
@@ -155,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Datos a enviar:", data); // Debug para verificar los datos antes de enviar
 
         // Envío de datos a Google Apps Script
-        fetch("https://script.google.com/macros/s/AKfycbw2h-sXURV2rben2YML_GKVCb_XhIzNYNOT9HmvCu8JezV9GIoLoqhE1K4xkfwS6yXE/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbxJyPXTLx7y1cGdTeC8HhIQpMbpMJpXlWGmpS51f8sQJyvTLmFRYctcqYD7cAi_UL62/exec", {
             method: "POST",
             mode: "no-cors",  // 🔹 Evita bloqueos CORS
             headers: { "Content-Type": "application/json" },

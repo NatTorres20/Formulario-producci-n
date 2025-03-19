@@ -1,11 +1,66 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("registroForm");
-    const numReferenciasInput = document.getElementById("numReferencias");
-    const referenciasContainer = document.getElementById("referenciasContainer");
-    const anomaliaSelect = document.getElementById("anomalia");
-    const descripcionAnomalia = document.getElementById("descripcionAnomalia");
-    const mensajeExito = document.getElementById("mensajeExito");
+   
+    form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
+    const fecha = document.getElementById("Fecha").value;
+    const operario = document.getElementById("operario").value;
+    const empaquesDañados = document.getElementById("empaquesDañados").value;
+    const motivoDaño = document.getElementById("motivoDaño").value;
+    const anomalia = document.getElementById("anomalia").value;
+    const descripcionAnomalia = document.getElementById("descripcionAnomalia").value;
+
+    let referencias = [];
+    let cantidades = [];
+
+    referenciasContainer.querySelectorAll("select").forEach((select, index) => {
+        referencias.push(select.value);
+        cantidades.push(referenciasContainer.querySelectorAll("input")[index].value);
+    });
+
+    // Obtener valores de la tabla de daños
+    const dañosInputs = document.querySelectorAll(".input-daños");
+    const burbujaCantidad = dañosInputs[0].value;
+    const rotoCantidad = dañosInputs[1].value;
+    const crudoCantidad = dañosInputs[2].value;
+    const quemadoCantidad = dañosInputs[3].value;
+    const otroCantidad = dañosInputs[4].value;
+
+    const data = {
+        fecha,
+        operario,
+        referencias,
+        cantidades,
+        empaquesDañados: {
+            Burbuja: burbujaCantidad,
+            Roto: rotoCantidad,
+            Crudo: crudoCantidad,
+            Quemado: quemadoCantidad,
+            Otro: otroCantidad
+        },
+        anomalia,
+        descripcionAnomalia
+    };
+
+    console.log("Datos a enviar:", data); // Debug
+
+    // Envío de datos a Google Apps Script
+    fetch("https://script.google.com/macros/s/AKfycbxJyPXTLx7y1cGdTeC8HhIQpMbpMJpXlWGmpS51f8sQJyvTLmFRYctcqYD7cAi_UL62/exec", {
+        method: "POST",
+        mode: "no-cors", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        console.log("Enviado correctamente");
+        mensajeExito.classList.remove("hidden");
+        form.reset();
+        referenciasContainer.innerHTML = "";
+    })
+    .catch(error => console.error("Error:", error));
+});
+
+    
 document.addEventListener("DOMContentLoaded", function () {
     const operarioSelect = document.getElementById("operario");
 
@@ -152,8 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Crudo: crudoCantidad,
                 Quemado: quemadoCantidad,
                 Otro: otroCantidad
-  }
-};
+              },
 
             anomalia,
             descripcionAnomalia

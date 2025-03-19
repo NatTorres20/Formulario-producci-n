@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const anomaliaSelect = document.getElementById("anomalia");
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
-    const empaquesDañadosContainer = document.getElementById("empaquesDañadosContainer");
 
     // Lista de referencias disponibles
     const referenciasLista = [
@@ -61,31 +60,14 @@ document.addEventListener("DOMContentLoaded", function () {
         descripcionAnomalia.disabled = anomaliaSelect.value === "No";
     });
 
-    // Sección de empaques dañados
-    const tiposDaño = ["Roto", "Quemado", "Crudo", "Burbuja", "Otro"];
-    tiposDaño.forEach(tipo => {
-        const div = document.createElement("div");
-
-        const label = document.createElement("label");
-        label.textContent = `${tipo}: `;
-
-        const input = document.createElement("input");
-        input.type = "number";
-        input.min = "0";
-        input.placeholder = `Cantidad de empaques ${tipo.toLowerCase()}`;
-        input.dataset.tipoDaño = tipo;
-
-        div.appendChild(label);
-        div.appendChild(input);
-        empaquesDañadosContainer.appendChild(div);
-    });
-
     // Envío del formulario
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const fecha = document.getElementById("Fecha").value;
         const operario = document.getElementById("operario").value;
+        const empaquesDañados = document.getElementById("empaquesDañados").value;
+        const motivoDaño = document.getElementById("motivoDaño").value;
         const anomalia = document.getElementById("anomalia").value;
         const descripcionAnomalia = document.getElementById("descripcionAnomalia").value;
 
@@ -97,19 +79,13 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidades.push(referenciasContainer.querySelectorAll("input")[index].value);
         });
 
-        let empaquesDañados = {};
-        empaquesDañadosContainer.querySelectorAll("input").forEach(input => {
-            if (input.value) {
-                empaquesDañados[input.dataset.tipoDaño] = input.value;
-            }
-        });
-
         const data = {
             fecha,
             operario,
             referencias,
             cantidades,
             empaquesDañados,
+            motivoDaño,
             anomalia,
             descripcionAnomalia
         };
@@ -128,8 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-            empaquesDañadosContainer.innerHTML = ""; // Reiniciar campos de empaques dañados
         })
         .catch(error => console.error("Error:", error));
     });
 });
+

@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", datos); // Para depuración
 
-        fetch("URL_DE_TU_API", {
+        fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
             method: "POST",
             body: JSON.stringify(datos),
             headers: { "Content-Type": "application/json" }

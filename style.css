@@ -66,29 +66,31 @@ button:hover {
 
 
 table {
-    width: 100%;
+    width: 90%;  /* Reduce el ancho de la tabla */
+    margin: 0 auto; /* Centra la tabla */
     border-collapse: collapse;
 }
 
 th, td {
     border: 1px solid black;
-    padding: 8px;
-    text-align: left;
+    padding: 5px;
+    text-align: center;
+    font-size: 14px; /* Reduce el tamaño del texto */
 }
 
-th {
-    background-color: #f2f2f2;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th, td {
-    border: 1px solid black;
-    padding: 8px;
+td input {
+    width: 50px; /* Reduce el tamaño del input */
     text-align: center;
 }
-input {
-    width: 50px;
+
+h3 {
+    text-align: center;
+    font-size: 16px;
 }
 
+/* Ajustes para el campo de fecha */
+input[type="date"] {
+    width: 150px;
+    padding: 5px;
+    text-align: center;
+}

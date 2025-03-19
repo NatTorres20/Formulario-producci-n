@@ -21,41 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const tablaDaños = document.getElementById("tabla-daños");
-
-    // Lista de tipos de daño
-    const tiposDeDaño = [
-        "Rasgado",
-        "Perforado",
-        "Mal sellado",
-        "Suciedad",
-        "Otro"
-    ];
-
-    // Generar filas dinámicamente
-    tiposDeDaño.forEach(tipo => {
-        const fila = document.createElement("tr");
-
-        // Celda de tipo de daño
-        const celdaTipo = document.createElement("td");
-        celdaTipo.textContent = tipo;
-
-        // Celda de cantidad con input numérico
-        const celdaCantidad = document.createElement("td");
-        const inputCantidad = document.createElement("input");
-        inputCantidad.type = "number";
-        inputCantidad.min = "0";
-        inputCantidad.value = "0";
-        inputCantidad.classList.add("input-daños");
-
-        celdaCantidad.appendChild(inputCantidad);
-        fila.appendChild(celdaTipo);
-        fila.appendChild(celdaCantidad);
-
-        tablaDaños.appendChild(fila);
-    });
-});
 
     // Lista de referencias disponibles
     const referenciasLista = [
@@ -106,6 +71,44 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const tablaDaños = document.getElementById("tabla-daños");
+
+    // Lista de tipos de daño
+    const tiposDeDaño = [
+        "Rasgado",
+        "Perforado",
+        "Mal sellado",
+        "Suciedad",
+        "Otro"
+    ];
+
+    // Generar filas dinámicamente
+    tiposDeDaño.forEach(tipo => {
+        const fila = document.createElement("tr");
+
+        // Celda de tipo de daño
+        const celdaTipo = document.createElement("td");
+        celdaTipo.textContent = tipo;
+
+        // Celda de cantidad con input numérico
+        const celdaCantidad = document.createElement("td");
+        const inputCantidad = document.createElement("input");
+        inputCantidad.type = "number";
+        inputCantidad.min = "0";
+        inputCantidad.value = "0";
+        inputCantidad.classList.add("input-daños");
+
+        celdaCantidad.appendChild(inputCantidad);
+        fila.appendChild(celdaTipo);
+        fila.appendChild(celdaCantidad);
+
+        tablaDaños.appendChild(fila);
+    });
+});
+
+
+    
     // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
         descripcionAnomalia.disabled = anomaliaSelect.value === "No";

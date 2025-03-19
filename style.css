@@ -88,9 +88,11 @@ h3 {
     font-size: 16px;
 }
 
-/* Ajustes para el campo de fecha */
 input[type="date"] {
-    width: 150px;
-    padding: 5px;
+    width: 100%;  /* Hace que el campo de fecha tenga el mismo ancho que el select */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     text-align: center;
+    box-sizing: border-box; /* Asegura que el padding no altere el ancho total */
 }

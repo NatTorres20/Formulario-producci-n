@@ -66,21 +66,25 @@ button:hover {
 
 
 table {
-    width: 90%;  /* Reduce el ancho de la tabla */
+    width: 100%; /* Ocupa todo el ancho disponible del contenedor */
+    max-width: 300px; /* Limita el tamaño máximo de la tabla */
     margin: 0 auto; /* Centra la tabla */
     border-collapse: collapse;
 }
 
 th, td {
     border: 1px solid black;
-    padding: 5px;
+    padding: 3px; /* Reduce el espacio interno */
     text-align: center;
-    font-size: 14px; /* Reduce el tamaño del texto */
+    font-size: 12px; /* Reduce el tamaño del texto */
 }
 
 td input {
-    width: 50px; /* Reduce el tamaño del input */
+    width: 40px; /* Hace los cuadros más pequeños */
+    height: 25px; /* Reduce la altura */
     text-align: center;
+    font-size: 12px; /* Reduce el tamaño del texto dentro del input */
+    padding: 2px;
 }
 
 h3 {

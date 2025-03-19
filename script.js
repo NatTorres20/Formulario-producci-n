@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const anomaliaSelect = document.getElementById("anomalia");
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
+    const tiposDanioContainer = document.getElementById("tiposDanioContainer");
+    const tiposDeDanio = ["Burbuja", "Roto", "Deformado", "Mal Cortado"];
 
     // Lista de referencias disponibles
     const referenciasLista = [
@@ -25,6 +27,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = ""; // Limpia el contenedor antes de agregar nuevos elementos
+function generarCamposDanio() {
+    // Limpia el contenedor antes de agregar nuevos elementos
+    tiposDanioContainer.innerHTML = "";  
+
+    tiposDeDanio.forEach(tipo => {
+        const label = document.createElement("label");
+        label.textContent = `${tipo}:`;
+
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.required = true;
+        input.placeholder = `Cantidad de ${tipo}`;
+        input.setAttribute("data-tipo", tipo);
+
+        tiposDanioContainer.appendChild(label);
+        tiposDanioContainer.appendChild(input);
+    });
+}
+
+// Llamar a la función al cargar la página
+generarCamposDanio();
 
         const cantidad = parseInt(numReferenciasInput.value);
         if (isNaN(cantidad) || cantidad <= 0) return;
@@ -73,22 +97,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let referencias = [];
         let cantidades = [];
+        let empaquesDañados = {};
+
+        tiposDanioContainer.querySelectorAll("input").forEach(input => {
+        empaquesDañados[input.getAttribute("data-tipo")] = input.value || "0";
+});
 
         referenciasContainer.querySelectorAll("select").forEach((select, index) => {
             referencias.push(select.value);
             cantidades.push(referenciasContainer.querySelectorAll("input")[index].value);
         });
 
-        const data = {
-            fecha,
-            operario,
-            referencias,
-            cantidades,
-            empaquesDañados,
-            motivoDaño,
-            anomalia,
-            descripcionAnomalia
-        };
+      const data = {
+    fecha,
+    operario,
+    referencias,
+    cantidades,
+    empaquesDañados, // Se envía como un objeto con los tipos de daño y sus cantidades
+    motivoDaño,
+    anomalia,
+    descripcionAnomalia
+};
+
 
         console.log("Datos a enviar:", data); // Debug para verificar los datos antes de enviar
 

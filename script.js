@@ -26,14 +26,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // 📌 ✅ Capturar correctamente los valores de los empaques dañados
-        const tiposDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
-        const inputsDaño = document.querySelectorAll("#tabla-daños tbody input");
-        const empaquesDañados = {};
-
-        inputsDaño.forEach((input, index) => {
-            empaquesDañados[tiposDaño[index]] = parseInt(input.value) || 0;
-        });
+        // 📌 Obtener datos de empaques dañados
+        const empaquesDañados = {
+            Burbuja: parseInt(document.querySelector('tr:nth-child(1) td input').value) || 0,
+            Roto: parseInt(document.querySelector('tr:nth-child(2) td input').value) || 0,
+            Crudo: parseInt(document.querySelector('tr:nth-child(3) td input').value) || 0,
+            Quemado: parseInt(document.querySelector('tr:nth-child(4) td input').value) || 0,
+            Otro: parseInt(document.querySelector('tr:nth-child(5) td input').value) || 0
+        };
 
         const anomalia = anomaliaSelect.value;
         const descripcionAnomaliaValue = descripcionAnomalia.disabled ? "" : descripcionAnomalia.value;
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             operario,
             referencias,
             cantidades,
-            empaquesDañados, // ✅ Ahora los valores se capturan correctamente
+            empaquesDañados,
             anomalia,
             descripcionAnomalia: descripcionAnomaliaValue
         };

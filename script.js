@@ -6,16 +6,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
 
+    if (!form || !numReferenciasInput || !referenciasContainer || !anomaliaSelect || !descripcionAnomalia || !mensajeExito) {
+        console.error("Faltan elementos en el HTML.");
+        return;
+    }
+
     // Lista de operarios
     const operarios = ["Diego Lopez"];
     const operarioSelect = document.getElementById("operario");
 
-    operarios.forEach(operario => {
-        const option = document.createElement("option");
-        option.value = operario;
-        option.textContent = operario;
-        operarioSelect.appendChild(option);
-    });
+    if (operarioSelect) {
+        operarios.forEach(operario => {
+            const option = document.createElement("option");
+            option.value = operario;
+            option.textContent = operario;
+            operarioSelect.appendChild(option);
+        });
+    } else {
+        console.error("Elemento 'operario' no encontrado.");
+    }
 
     // Lista de referencias disponibles
     const referenciasLista = [
@@ -33,14 +42,19 @@ document.addEventListener("DOMContentLoaded", function () {
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
-    // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = "";
-
         const cantidad = parseInt(numReferenciasInput.value);
-        if (isNaN(cantidad) || cantidad <= 0) return;
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            console.warn("Número de referencias no válido.");
+            return;
+        }
 
         for (let i = 0; i < cantidad; i++) {
+            const div = document.createElement("div");
+            div.classList.add("referencia-item");
+
             const label = document.createElement("label");
             label.textContent = `Referencia ${i + 1}:`;
 
@@ -60,9 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidadInput.required = true;
             cantidadInput.placeholder = "Cantidad producida";
 
-            referenciasContainer.appendChild(label);
-            referenciasContainer.appendChild(select);
-            referenciasContainer.appendChild(cantidadInput);
+            div.appendChild(label);
+            div.appendChild(select);
+            div.appendChild(cantidadInput);
+            referenciasContainer.appendChild(div);
         }
     });
 
@@ -71,32 +86,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!tablaDaños) {
         console.error("No se encontró la tabla de daños.");
-        return;
+    } else {
+        const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
+        tablaDaños.innerHTML = "";
+
+        tiposDeDaño.forEach(tipo => {
+            const fila = document.createElement("tr");
+
+            const celdaTipo = document.createElement("td");
+            celdaTipo.textContent = tipo;
+
+            const celdaCantidad = document.createElement("td");
+            const inputCantidad = document.createElement("input");
+            inputCantidad.type = "number";
+            inputCantidad.min = "0";
+            inputCantidad.value = "0";
+            inputCantidad.style.width = "60px";
+            inputCantidad.classList.add("input-daños");
+            inputCantidad.setAttribute("data-tipo", tipo);
+
+            celdaCantidad.appendChild(inputCantidad);
+            fila.appendChild(celdaTipo);
+            fila.appendChild(celdaCantidad);
+            tablaDaños.appendChild(fila);
+        });
     }
-
-    const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
-    tablaDaños.innerHTML = "";
-
-    tiposDeDaño.forEach(tipo => {
-        const fila = document.createElement("tr");
-
-        const celdaTipo = document.createElement("td");
-        celdaTipo.textContent = tipo;
-
-        const celdaCantidad = document.createElement("td");
-        const inputCantidad = document.createElement("input");
-        inputCantidad.type = "number";
-        inputCantidad.min = "0";
-        inputCantidad.value = "0";
-        inputCantidad.style.width = "60px";
-        inputCantidad.classList.add("input-daños");
-        inputCantidad.setAttribute("data-tipo", tipo); // Identificador para recoger valores
-
-        celdaCantidad.appendChild(inputCantidad);
-        fila.appendChild(celdaTipo);
-        fila.appendChild(celdaCantidad);
-        tablaDaños.appendChild(fila);
-    });
 
     // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
@@ -107,22 +121,23 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const fecha = document.getElementById("Fecha").value;
-        const operario = document.getElementById("operario").value;
-        const empaquesDañados = document.getElementById("empaquesDañados").value;
-        const motivoDaño = document.getElementById("motivoDaño").value;
-        const anomalia = document.getElementById("anomalia").value;
-        const descripcionAnomalia = document.getElementById("descripcionAnomalia").value;
+        const fecha = document.getElementById("Fecha")?.value;
+        const operario = document.getElementById("operario")?.value;
+        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
+        const motivoDaño = document.getElementById("motivoDaño")?.value;
 
         let referencias = [];
         let cantidades = [];
 
-        referenciasContainer.querySelectorAll("select").forEach((select, index) => {
-            referencias.push(select.value);
-            cantidades.push(referenciasContainer.querySelectorAll("input")[index].value);
+        referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
+            const select = item.querySelector("select");
+            const input = item.querySelector("input");
+            if (select && input) {
+                referencias.push(select.value);
+                cantidades.push(input.value);
+            }
         });
 
-        // Recopilando información de defectos
         let defectos = {};
         document.querySelectorAll(".input-daños").forEach(input => {
             defectos[input.getAttribute("data-tipo")] = input.value;
@@ -135,26 +150,22 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidades,
             empaquesDañados,
             motivoDaño,
-            defectos, // 🔹 Ahora los defectos se envían correctamente
-            anomalia,
-            descripcionAnomalia
+            defectos,
+            anomalia: anomaliaSelect.value,
+            descripcionAnomalia: descripcionAnomalia.value
         };
 
-        console.log("Datos a enviar:", data); // Debug para verificar los datos antes de enviar
+        console.log("Datos a enviar:", data);
 
-        // Envío de datos a Google Apps Script
         fetch("https://script.google.com/macros/s/AKfycbxJyPXTLx7y1cGdTeC8HhIQpMbpMJpXlWGmpS51f8sQJyvTLmFRYctcqYD7cAi_UL62/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
-        })
-        .then(() => {
-            console.log("Enviado correctamente");
+        }).then(() => {
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-        })
-        .catch(error => console.error("Error:", error));
+        }).catch(error => console.error("Error:", error));
     });
 });

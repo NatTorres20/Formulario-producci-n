@@ -92,21 +92,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", datos); // Para depuración
 
-        fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
-            method: "POST",
-            body: JSON.stringify(datos),
-            headers: { "Content-Type": "application/json" }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Respuesta del servidor:", data);
-            mensajeExito.classList.remove("hidden");
-            form.reset();
-            referenciasContainer.innerHTML = "";
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Hubo un problema al enviar los datos.");
-        });
-    });
+      fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
+    method: "POST",
+    body: JSON.stringify(datos),
+    headers: { "Content-Type": "application/json" }
+})
+.then(response => {
+    if (!response.ok) {
+        return response.text().then(text => { throw new Error(text) });
+    }
+    return response.json();
+})
+.then(data => {
+    console.log("Respuesta del servidor:", data);
+    mensajeExito.classList.remove("hidden");
+    form.reset();
+    referenciasContainer.innerHTML = "";
+})
+.catch(error => {
+    console.error("Error en la petición:", error);
+    alert("Error en el envío: " + error.message);
 });

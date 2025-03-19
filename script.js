@@ -1,16 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("registroForm");
-    const operarioContainer = document.getElementById("operarioContainer")
     const numReferenciasInput = document.getElementById("numReferencias");
     const referenciasContainer = document.getElementById("referenciasContainer");
     const anomaliaSelect = document.getElementById("anomalia");
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
 
-    // Lista de operarios de planta
-     const operarioLista = [
-         "Diego Lopez"
-    ];
+document.addEventListener("DOMContentLoaded", function () {
+    const operarioSelect = document.getElementById("operario");
+
+    // Lista de operarios
+    const operarios = ["Diego Lopez"];
+
+    // Generar opciones dinámicamente
+    operarios.forEach(operario => {
+        const option = document.createElement("option");
+        option.value = operario;
+        option.textContent = operario;
+        operarioSelect.appendChild(option);
+    });
+});
+
 
     // Lista de referencias disponibles
     const referenciasLista = [

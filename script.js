@@ -71,22 +71,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+      // Tabla de daños
 document.addEventListener("DOMContentLoaded", function () {
-    const tablaDaños = document.getElementById("tabla-daños");
+    const tablaDaños = document.querySelector("#tabla-daños tbody"); // Seleccionar solo el tbody
 
-    // Asegurarse de que la tabla existe antes de llenarla
+    // Verificar si la tabla existe
     if (!tablaDaños) {
         console.error("No se encontró la tabla de daños.");
         return;
     }
 
-    // Lista de tipos de daño
+    // Tipos de daño predefinidos
     const tiposDeDaño = ["Rasgado", "Perforado", "Mal sellado", "Suciedad", "Otro"];
 
     // Limpiar la tabla antes de agregar filas (por si acaso)
     tablaDaños.innerHTML = "";
 
-    // Generar dinámicamente las filas
+    // Agregar dinámicamente las filas con input de cantidad
     tiposDeDaño.forEach(tipo => {
         const fila = document.createElement("tr");
 
@@ -94,16 +95,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const celdaTipo = document.createElement("td");
         celdaTipo.textContent = tipo;
 
-        // Celda con el input numérico para ingresar la cantidad
+        // Celda con input para ingresar la cantidad
         const celdaCantidad = document.createElement("td");
         const inputCantidad = document.createElement("input");
         inputCantidad.type = "number";
         inputCantidad.min = "0";
         inputCantidad.value = "0";
-        inputCantidad.style.width = "60px"; // Ajustar tamaño
+        inputCantidad.style.width = "60px"; // Ajuste de tamaño
         inputCantidad.classList.add("input-daños");
 
-        // Agregar input dentro de la celda
+        // Agregar input a la celda
         celdaCantidad.appendChild(inputCantidad);
 
         // Agregar celdas a la fila
@@ -114,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
         tablaDaños.appendChild(fila);
     });
 });
-
 
     
     // Habilita o deshabilita la descripción de anomalía

@@ -74,16 +74,19 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     const tablaDaños = document.getElementById("tabla-daños");
 
-    // Lista de tipos de daño
-    const tiposDeDaño = [
-        "Rasgado",
-        "Perforado",
-        "Mal sellado",
-        "Suciedad",
-        "Otro"
-    ];
+    // Asegurarse de que la tabla existe antes de llenarla
+    if (!tablaDaños) {
+        console.error("No se encontró la tabla de daños.");
+        return;
+    }
 
-    // Generar dinámicamente las filas en la tabla
+    // Lista de tipos de daño
+    const tiposDeDaño = ["Rasgado", "Perforado", "Mal sellado", "Suciedad", "Otro"];
+
+    // Limpiar la tabla antes de agregar filas (por si acaso)
+    tablaDaños.innerHTML = "";
+
+    // Generar dinámicamente las filas
     tiposDeDaño.forEach(tipo => {
         const fila = document.createElement("tr");
 
@@ -97,7 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
         inputCantidad.type = "number";
         inputCantidad.min = "0";
         inputCantidad.value = "0";
-        inputCantidad.classList.add("input-daños"); // Para darle estilo si es necesario
+        inputCantidad.style.width = "60px"; // Ajustar tamaño
+        inputCantidad.classList.add("input-daños");
 
         // Agregar input dentro de la celda
         celdaCantidad.appendChild(inputCantidad);
@@ -110,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tablaDaños.appendChild(fila);
     });
 });
+
 
     
     // Habilita o deshabilita la descripción de anomalía

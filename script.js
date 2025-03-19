@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const anomaliaSelect = document.getElementById("anomalia");
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
+    const empaquesDañadosContainer = document.getElementById("empaquesDañadosContainer");
 
     // Lista de referencias disponibles
     const referenciasLista = [
@@ -21,6 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "Goma 8-10", "Panex 4-6 Caucho-Negro", "Redondo negro pequeño",
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
+
+    // Lista de tipos de daño
+    const tiposDeDaño = ["Burbuja", "Roto", "Desformado", "Mal cortado"];
 
     // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
@@ -55,6 +59,29 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Generar campos para registrar empaques dañados por tipo de daño
+    function generarCamposDaño() {
+        empaquesDañadosContainer.innerHTML = ""; // Limpia los campos anteriores
+
+        tiposDeDaño.forEach(tipo => {
+            const label = document.createElement("label");
+            label.textContent = `Cantidad de empaques dañados (${tipo}):`;
+
+            const input = document.createElement("input");
+            input.type = "number";
+            input.min = "0";
+            input.value = "0";
+            input.className = "dañoInput";
+            input.dataset.tipo = tipo;
+
+            empaquesDañadosContainer.appendChild(label);
+            empaquesDañadosContainer.appendChild(input);
+        });
+    }
+
+    // Generar los campos de daño al cargar la página
+    generarCamposDaño();
+
     // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
         descripcionAnomalia.disabled = anomaliaSelect.value === "No";
@@ -66,8 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const fecha = document.getElementById("Fecha").value;
         const operario = document.getElementById("operario").value;
-        const empaquesDañados = document.getElementById("empaquesDañados").value;
-        const motivoDaño = document.getElementById("motivoDaño").value;
         const anomalia = document.getElementById("anomalia").value;
         const descripcionAnomalia = document.getElementById("descripcionAnomalia").value;
 
@@ -79,13 +104,17 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidades.push(referenciasContainer.querySelectorAll("input")[index].value);
         });
 
+        let empaquesDañados = {};
+        document.querySelectorAll(".dañoInput").forEach(input => {
+            empaquesDañados[input.dataset.tipo] = input.value;
+        });
+
         const data = {
             fecha,
             operario,
             referencias,
             cantidades,
             empaquesDañados,
-            motivoDaño,
             anomalia,
             descripcionAnomalia
         };
@@ -104,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
+            generarCamposDaño(); // Reiniciar los campos de daños
         })
         .catch(error => console.error("Error:", error));
     });

@@ -83,30 +83,33 @@ document.addEventListener("DOMContentLoaded", function () {
         "Otro"
     ];
 
-    // Generar filas dinámicamente
+    // Generar dinámicamente las filas en la tabla
     tiposDeDaño.forEach(tipo => {
         const fila = document.createElement("tr");
 
-        // Celda de tipo de daño
+        // Celda con el nombre del daño
         const celdaTipo = document.createElement("td");
         celdaTipo.textContent = tipo;
 
-        // Celda de cantidad con input numérico
+        // Celda con el input numérico para ingresar la cantidad
         const celdaCantidad = document.createElement("td");
         const inputCantidad = document.createElement("input");
         inputCantidad.type = "number";
         inputCantidad.min = "0";
         inputCantidad.value = "0";
-        inputCantidad.classList.add("input-daños");
+        inputCantidad.classList.add("input-daños"); // Para darle estilo si es necesario
 
+        // Agregar input dentro de la celda
         celdaCantidad.appendChild(inputCantidad);
+
+        // Agregar celdas a la fila
         fila.appendChild(celdaTipo);
         fila.appendChild(celdaCantidad);
 
+        // Agregar fila a la tabla
         tablaDaños.appendChild(fila);
     });
 });
-
 
     
     // Habilita o deshabilita la descripción de anomalía

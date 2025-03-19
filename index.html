@@ -35,16 +35,20 @@
 
             <label for="motivoDaño">Motivo principal del daño:</label>
             <input type="text" id="motivoDaño" required>
+            
             <h3>Registro de Empaques Dañados</h3>
             <table border="1">
-                <tr>
-                    <th>Tipo de Daño</th>
-                    <th>Cantidad</th>
-                </tr>
+               <thead>
+                    <tr>
+                        <th>Tipo de Daño</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
                 <tbody id="tabla-daños">
                     <!-- Aquí se agregarán los daños dinámicamente -->
                 </tbody>
             </table>
+
             
             <label for="anomalia">¿Hubo alguna anomalía o novedad en la jornada?</label>
             <select id="anomalia">

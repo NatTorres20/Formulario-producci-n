@@ -1,10 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("registroForm");
+    const operarioContainer = document.getElementById("operarioContainer")
     const numReferenciasInput = document.getElementById("numReferencias");
     const referenciasContainer = document.getElementById("referenciasContainer");
     const anomaliaSelect = document.getElementById("anomalia");
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
+
+    // Lista de operarios de planta
+     const operarioLista = [
+         "Diego Lopez"
+    ];
 
     // Lista de referencias disponibles
     const referenciasLista = [

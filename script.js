@@ -168,3 +168,4 @@ document.addEventListener("DOMContentLoaded", function () {
              referenciasContainer.innerHTML = "";
          }).catch(error => console.error("Error:", error));
      });
+ });

@@ -4,36 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Producción</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Registro de Producción</h1>
-    <form id="registroForm">
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" required>
-
-        <label for="operario">Nombre del operario:</label>
-        <input type="text" id="operario" required>
-
-        <label for="referencias">Referencias de los empaques:</label>
-        <input type="text" id="referencias" required>
-
-        <label for="cantidades">Cantidad producida:</label>
-        <input type="number" id="cantidades" min="0" required>
+    <div class="container">
         
-        <label for="empaquesDañadosContainer">Registro de empaques dañados:</label>
-        <div id="empaquesDañadosContainer"></div>
+        <h1>Registro de Producción</h1>
+        
+        <form id="registroForm">
 
-        <label for="anomalia">¿Hubo alguna anomalía?</label>
-        <select id="anomalia" required>
-            <option value="No">No</option>
-            <option value="Sí">Sí</option>
-        </select>
+            <label for="Fecha">Nombre del operario:</label>
+            <input type="date" id="Fecha" required>
 
-        <label for="descripcionAnomalia">Descripción de la anomalía:</label>
-        <textarea id="descripcionAnomalia"></textarea>
+            <label for="operario">Nombre del operario:</label>
+            <input type="text" id="operario" required>
 
-        <button type="submit">Guardar Registro</button>
-    </form>
+            <label for="numReferencias">¿Cuántas referencias fabricó hoy?</label>
+            <input type="number" id="numReferencias" min="1" required>
+
+            <div id="referenciasContainer"></div>
+
+            <label for="empaquesDañados">Cantidad de empaques dañados:</label>
+            <input type="number" id="empaquesDañados" min="0" required>
+
+            <label for="motivoDaño">Motivo principal del daño:</label>
+            <input type="text" id="motivoDaño" required>
+
+            <label for="anomalia">¿Hubo alguna anomalía o novedad en la jornada?</label>
+            <select id="anomalia">
+                <option value="No">No</option>
+                <option value="Sí">Sí</option>
+            </select>
+
+            <label for="descripcionAnomalia">Descripción de la anomalía o novedad:</label>
+            <textarea id="descripcionAnomalia" disabled></textarea>
+
+            <button type="submit">Enviar Registro</button>
+        </form>
+
+        <p id="mensajeExito" class="hidden">Registro enviado con éxito ✅</p>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Tipos de daño predefinidos
-    const tiposDeDaño = ["Rasgado", "Perforado", "Mal sellado", "Suciedad", "Otro"];
+    const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
 
     // Limpiar la tabla antes de agregar filas (por si acaso)
     tablaDaños.innerHTML = "";

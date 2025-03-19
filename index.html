@@ -8,13 +8,12 @@
 </head>
 <body>
     <div class="container">
-    <div id="tiposDanioContainer"></div>
-   
+        
         <h1>Registro de Producción</h1>
         
         <form id="registroForm">
 
-            <label for="Fecha">Fecha:</label>
+            <label for="Fecha">Nombre del operario:</label>
             <input type="date" id="Fecha" required>
 
             <label for="operario">Nombre del operario:</label>
@@ -28,21 +27,8 @@
             <label for="empaquesDañados">Cantidad de empaques dañados:</label>
             <input type="number" id="empaquesDañados" min="0" required>
 
-            <label for="motivoDaño">Motivo del Daño:</label>
-            <select id="motivoDaño" name="motivoDaño" required>
-                <option value="">Seleccione una opción</option>
-                <option value="Burbuja">Burbuja</option>
-                <option value="Roto">Roto</option>
-                <option value="Quemado">Quemado</option>
-                <option value="Crudo">Crudo</option>
-                <option value="Otro">Otro</option>
-            </select>
-
-            <div id="otroMotivoContainer" style="display: none;">
-                <label for="otroMotivo">Especifique el motivo:</label>
-                <input type="text" id="otroMotivo" name="otroMotivo" placeholder="Describa el motivo">
-            </div>
-
+            <label for="motivoDaño">Motivo principal del daño:</label>
+            <input type="text" id="motivoDaño" required>
 
             <label for="anomalia">¿Hubo alguna anomalía o novedad en la jornada?</label>
             <select id="anomalia">

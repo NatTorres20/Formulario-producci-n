@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
     // URL de Google Apps Script Web App (REEMPLAZAR con tu URL)
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwc3ATznfBbu9vEG3ikF2aY9MXhyn-uKs6jlU-lzyGcTs9hUZXgMHZTEj-TckttLV1h/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyYJl-3-zMRsJLfA3KJngbPkJQUTDXlcq09pPnHMK6Zp2lXsEBcynRrSLujZFkirU_X/exec";
 
     // Mostrar campos de referencia cuando el usuario ingresa el número de referencias
     numReferenciasInput.addEventListener("input", function () {

@@ -2,14 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("registroForm");
     const numReferenciasInput = document.getElementById("numReferencias");
     const referenciasContainer = document.getElementById("referenciasContainer");
-    const anomaliaSelect = document.getElementById("anomalia");
-    const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
-
-    if (!form || !numReferenciasInput || !referenciasContainer || !anomaliaSelect || !descripcionAnomalia || !mensajeExito) {
-        console.error("Faltan elementos en el HTML.");
-        return;
-    }
 
     const operarios = ["Diego Lopez"];
     const operarioSelect = document.getElementById("operario");
@@ -21,31 +14,15 @@ document.addEventListener("DOMContentLoaded", function () {
             option.textContent = operario;
             operarioSelect.appendChild(option);
         });
-    } else {
-        console.error("Elemento 'operario' no encontrado.");
     }
 
-    const referenciasLista = [
-        "Panex 2-3 Trans", "Panex 4-6 Trans", "Panex 4-6 Blanco", "Panex 8-10 Trans",
-        "Panex 2-3 Azul", "Panex 4-6 Azul", "Panex 8-10 Azul", "Redondo 2-3 Trans",
-        "Redondo 4-6 Trans", "Redondo 8-10 Trans", "Redondo 2-3 Azul", "Redondo 4-6 Azul",
-        "Redondo 8-10 Azul", "India 2-3", "India 4-6", "India 8-10", "Mazal #18",
-        "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30",
-        "Imusa 3.5 Naranja", "Imusa 7.5 Naranja", "Imusa 4.5 Amarillo", "Imusa 7.0 Blanco",
-        "Imusa 4.5 Blanco", "Imusa Safe Plus 7.0", "Imusa Safe Plus 4.5", "Imusa Española",
-        "Nova 2-3", "Nova 4-6", "Unco 4-6 silicona", "Fusible plano pequeño",
-        "Fusible plano grande", "Fusible PR pequeño suelto", "Fusible PR grande suelto",
-        "Fusible Grande Caucho", "Fusible Pequeño Caucho", "Goma 2-3", "Goma 4-6",
-        "Goma 8-10", "Panex 4-6 Caucho-Negro", "Redondo negro pequeño",
-        "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
-    ];
+    const referenciasLista = ["Panex 2-3 Trans", "Panex 4-6 Trans", "India 4-6", "Redondo 4-6 Trans"];
 
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
 
         if (isNaN(cantidad) || cantidad <= 0) {
-            console.warn("Número de referencias no válido.");
             return;
         }
 
@@ -79,16 +56,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    anomaliaSelect.addEventListener("change", function () {
-        descripcionAnomalia.disabled = anomaliaSelect.value === "No";
-    });
-
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const obtenerValor = (id) => {
             const elemento = document.getElementById(id);
-            return elemento && elemento.value ? elemento.value : "Sin dato";
+            if (!elemento || elemento.value.trim() === "") {
+                console.warn(`⚠️ Campo vacío: ${id}`);
+                return "Sin dato";
+            }
+            return elemento.value.trim();
         };
 
         const fecha = obtenerValor("Fecha");
@@ -96,12 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const empaquesDañados = obtenerValor("empaquesDañados");
         const motivoDaño = obtenerValor("motivoDaño");
         const anomalia = obtenerValor("anomalia");
-        const descripcionAnomaliaVal = obtenerValor("descripcionAnomalia");
-
-        let defectos = {};
-        document.querySelectorAll(".input-daños").forEach(input => {
-            defectos[input.getAttribute("data-tipo")] = input.value ? input.value : "Sin dato";
-        });
+        const descripcionAnomalia = obtenerValor("descripcionAnomalia");
 
         let registros = [];
 
@@ -110,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const input = item.querySelector("input");
 
             if (select && input) {
-                const referencia = select.value || "Sin dato";
-                const cantidad = input.value || "0";
+                const referencia = select.value.trim() || "Sin dato";
+                const cantidad = input.value.trim() || "0";
 
                 registros.push({
                     fecha,
@@ -120,14 +92,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     cantidad,
                     empaquesDañados,
                     motivoDaño,
-                    defectos,
                     anomalia,
-                    descripcionAnomalia: descripcionAnomaliaVal
+                    descripcionAnomalia
                 });
             }
         });
 
-        // Enviar cada referencia en una fila independiente
+        console.table(registros); // 📌 Revisión en consola antes de enviar
+
         Promise.all(
             registros.map(registro =>
                 fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
@@ -138,9 +110,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }).catch(error => console.error("Error al enviar datos:", error))
             )
         ).then(() => {
+            console.log("✅ Datos enviados correctamente.");
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-        });
+        }).catch(error => console.error("Error en la promesa:", error));
     });
 });

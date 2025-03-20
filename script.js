@@ -1,4 +1,4 @@
-codigo script.js es el siguiente: document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
      const form = document.getElementById("registroForm");
      const numReferenciasInput = document.getElementById("numReferencias");
      const referenciasContainer = document.getElementById("referenciasContainer");
@@ -168,4 +168,4 @@ codigo script.js es el siguiente: document.addEventListener("DOMContentLoaded", 
              referenciasContainer.innerHTML = "";
          }).catch(error => console.error("Error:", error));
      });
- });
+ }); 

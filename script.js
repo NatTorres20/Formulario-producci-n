@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
 
+    // Verificaciones iniciales
     if (!form || !numReferenciasInput || !referenciasContainer || !anomaliaSelect || !descripcionAnomalia || !mensajeExito) {
         console.error("Faltan elementos en el HTML.");
         return;
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
+    // Generar referencias dinámicamente
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
@@ -55,9 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const div = document.createElement("div");
             div.classList.add("referencia-item");
 
+            // Etiqueta
             const label = document.createElement("label");
             label.textContent = `Referencia ${i + 1}:`;
 
+            // Select con la lista de referencias
             const select = document.createElement("select");
             select.required = true;
 
@@ -68,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 select.appendChild(option);
             });
 
+            // Campo para la cantidad producida
             const cantidadInput = document.createElement("input");
             cantidadInput.type = "number";
             cantidadInput.min = "1";
@@ -87,34 +92,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!tablaDaños) {
         console.error("No se encontró la tabla de daños.");
     } else {
-        const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
-        tablaDaños.innerHTML = "";
-
-        tiposDeDaño.forEach(tipo => {
-            const fila = document.createElement("tr");
-
-            const celdaTipo = document.createElement("td");
-            celdaTipo.textContent = tipo;
-
-            const celdaCantidad = document.createElement("td");
-            const inputCantidad = document.createElement("input");
-            inputCantidad.type = "number";
-            inputCantidad.min = "0";
-            inputCantidad.value = "0";
-            inputCantidad.style.width = "60px";
-            inputCantidad.classList.add("input-daños");
-            inputCantidad.setAttribute("data-tipo", tipo);
-
-            celdaCantidad.appendChild(inputCantidad);
-            fila.appendChild(celdaTipo);
-            fila.appendChild(celdaCantidad);
-            tablaDaños.appendChild(fila);
-        });
+        // No es necesario regenerar la tabla si ya está en el HTML
+        // Solo nos aseguramos de que se capturen los datos luego
     }
 
     // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
-        descripcionAnomalia.disabled = anomaliaSelect.value === "No";
+        descripcionAnomalia.disabled = (this.value === "No");
+        if (this.value === "No") descripcionAnomalia.value = "";
     });
 
     // Envío del formulario
@@ -123,49 +108,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const fecha = document.getElementById("Fecha")?.value;
         const operario = document.getElementById("operario")?.value;
-        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
-        const motivoDaño = document.getElementById("motivoDaño")?.value;
+
+        // Capturar defectos de la tabla
+        let defectos = {};
+        const filasDefectos = document.querySelectorAll("#tabla-daños tbody tr");
+        filasDefectos.forEach(row => {
+            // La primera celda es el tipo de daño, la segunda celda es el input
+            const tipo = row.cells[0].textContent.trim();
+            const input = row.cells[1].querySelector("input");
+            if (input) {
+                // Convierte a número, si está vacío, será 0
+                defectos[tipo] = parseInt(input.value) || 0;
+            }
+        });
 
         let referencias = [];
         let cantidades = [];
 
+        // Capturar las referencias
         referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
             const select = item.querySelector("select");
             const input = item.querySelector("input");
             if (select && input) {
                 referencias.push(select.value);
-                cantidades.push(input.value);
+                cantidades.push(parseInt(input.value) || 0);
             }
         });
 
-        let defectos = {};
-        document.querySelectorAll(".input-daños").forEach(input => {
-            defectos[input.getAttribute("data-tipo")] = input.value;
-        });
+        // Capturar anomalía
+        const anomalia = anomaliaSelect.value;
+        const descripcion = descripcionAnomalia.value;
 
+        // Construir objeto de datos
         const data = {
             fecha,
             operario,
             referencias,
             cantidades,
-            empaquesDañados,
-            motivoDaño,
             defectos,
-            anomalia: anomaliaSelect.value,
-            descripcionAnomalia: descripcionAnomalia.value
+            anomalia,
+            descripcionAnomalia: descripcion
         };
 
-        console.log("Datos a enviar:", data);
+        console.log("Datos a enviar:", JSON.stringify(data, null, 2));
 
         fetch("https://script.google.com/macros/s/AKfycbwc3ATznfBbu9vEG3ikF2aY9MXhyn-uKs6jlU-lzyGcTs9hUZXgMHZTEj-TckttLV1h/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
-        }).then(() => {
+        })
+        .then(() => {
+            console.log("Datos enviados correctamente.");
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-        }).catch(error => console.error("Error:", error));
+        })
+        .catch(error => {
+            console.error("Error al enviar los datos:", error);
+        });
     });
 });
+

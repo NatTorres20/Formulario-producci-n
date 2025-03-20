@@ -4,139 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Producción</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            text-align: center;
-        }
-        table {
-            margin: 10px auto;
-            border-collapse: collapse;
-            width: 80%;
-        }
-        th, td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: center;
-        }
-        input[type="number"] {
-            width: 50px;
-            text-align: center;
-        }
-        button {
-            background-color: green;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        
+        <h2 class="titulo-formulario">REGISTRO DE PRODUCCIÓN CAUCHOS JTORRES</h2>
 
-    <h2>Registro de Producción</h2>
+        
+        <form id="registroForm">
 
-    <form id="registroForm">
-        <!-- Fecha -->
-        <label for="Fecha">Fecha:</label>
-        <input type="date" id="Fecha" required><br><br>
+            <label for="Fecha">Fecha:</label>
+            <input type="date" id="Fecha" required>
+            
+            <label for="operario">Nombre del operario:</label>
+            <select id="operario" required>
+                <option value="" disabled selected>Seleccione un operario</option>
+                <option value="Diego Lopez">Diego Lopez </option>
 
-        <!-- Nombre del Operario -->
-        <label for="operario">Nombre del Operario:</label>
-        <select id="operario" required>
-            <option value="">Seleccione un operario</option>
-            <option value="Operario 1">Operario 1</option>
-            <option value="Operario 2">Operario 2</option>
-            <option value="Operario 3">Operario 3</option>
-        </select><br><br>
+            </select>
 
-        <!-- Registro de Empaques Dañados -->
-        <h3>Registro de Empaques Dañados</h3>
-        <table>
-            <tr>
-                <th>Tipo de Daño</th>
-                <th>Cantidad</th>
-            </tr>
-            <tr>
-                <td>Burbuja</td>
-                <td><input type="number" class="input-daños" data-tipo="Burbuja" min="0" value="0"></td>
-            </tr>
-            <tr>
-                <td>Roto</td>
-                <td><input type="number" class="input-daños" data-tipo="Roto" min="0" value="0"></td>
-            </tr>
-            <tr>
-                <td>Crudo</td>
-                <td><input type="number" class="input-daños" data-tipo="Crudo" min="0" value="0"></td>
-            </tr>
-            <tr>
-                <td>Quemado</td>
-                <td><input type="number" class="input-daños" data-tipo="Quemado" min="0" value="0"></td>
-            </tr>
-            <tr>
-                <td>Otro</td>
-                <td><input type="number" class="input-daños" data-tipo="Otro" min="0" value="0"></td>
-            </tr>
-        </table>
 
-        <!-- Anomalía o Novedad -->
-        <label for="anomaliaSelect">¿Hubo alguna anomalía o novedad en la jornada?</label>
-        <select id="anomaliaSelect" required>
-            <option value="No">No</option>
-            <option value="Sí">Sí</option>
-        </select><br><br>
 
-        <!-- Descripción de la Anomalía -->
-        <label for="descripcionAnomalia">Descripción de la anomalía o novedad:</label><br>
-        <textarea id="descripcionAnomalia" rows="4" cols="50"></textarea><br><br>
+            <label for="numReferencias">¿Cuántas referencias fabricó hoy?</label>
+            <input type="number" id="numReferencias" min="1" required>
 
-        <!-- Botón Enviar -->
-        <button type="submit">Enviar Registro</button>
-    </form>
+            <div id="referenciasContainer"></div>
 
-    <script>
-        document.getElementById("registroForm").addEventListener("submit", function (e) {
-            e.preventDefault();
+    
 
-            // Capturar valores del formulario
-            const fecha = document.getElementById("Fecha")?.value;
-            const operario = document.getElementById("operario")?.value;
-            const anomalia = document.getElementById("anomaliaSelect")?.value;
-            const descripcionAnomalia = document.getElementById("descripcionAnomalia")?.value;
+            <h3>Registro de Empaques Dañados</h3>
+<table id="tabla-daños">
+    <thead>
+        <tr>
+            <th>Tipo de Daño</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Burbuja</td>
+            <td><input type="number" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>Roto</td>
+            <td><input type="number" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>Crudo</td>
+            <td><input type="number" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>Quemado</td>
+            <td><input type="number" min="0" value="0"></td>
+        </tr>
+        <tr>
+            <td>Otro</td>
+            <td><input type="number" min="0" value="0"></td>
+        </tr>
+    </tbody>
+</table>
 
-            // Capturar defectos
-            let defectos = {};
-            document.querySelectorAll(".input-daños").forEach(input => {
-                defectos[input.getAttribute("data-tipo")] = parseInt(input.value) || 0;
-            });
 
-            // Estructura de datos a enviar
-            const data = {
-                fecha,
-                operario,
-                defectos,
-                anomalia,
-                descripcionAnomalia
-            };
+            
+            
+            <label for="anomalia">¿Hubo alguna anomalía o novedad en la jornada?</label>
+            <select id="anomalia">
+                <option value="No">No</option>
+                <option value="Sí">Sí</option>
+            </select>
 
-            console.log("Datos a enviar:", JSON.stringify(data, null, 2));
+            <label for="descripcionAnomalia">Descripción de la anomalía o novedad:</label>
+            <textarea id="descripcionAnomalia" disabled></textarea>
 
-            // Enviar datos a Google Apps Script
-            fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            })
-            .then(() => {
-                alert("Registro enviado con éxito.");
-                document.getElementById("registroForm").reset();
-            })
-            .catch(error => console.error("Error:", error));
-        });
-    </script>
+            <button type="submit">Enviar Registro</button>
+        </form>
 
+        <p id="mensajeExito" class="hidden">Gracias DIEGO! Registro enviado con éxito ✅</p>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

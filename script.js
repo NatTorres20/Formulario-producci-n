@@ -81,43 +81,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Tabla de daños
-    const tablaDaños = document.querySelector("#tabla-daños tbody");
-
-    if (!tablaDaños) {
-        console.error("No se encontró la tabla de daños.");
-    } else {
-        const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
-        tablaDaños.innerHTML = "";
-
-        tiposDeDaño.forEach(tipo => {
-            const fila = document.createElement("tr");
-
-            const celdaTipo = document.createElement("td");
-            celdaTipo.textContent = tipo;
-
-            const celdaCantidad = document.createElement("td");
-            const inputCantidad = document.createElement("input");
-            inputCantidad.type = "number";
-            inputCantidad.min = "0";
-            inputCantidad.value = "0";
-            inputCantidad.style.width = "60px";
-            inputCantidad.classList.add("input-daños");
-            inputCantidad.setAttribute("data-tipo", tipo);
-
-            celdaCantidad.appendChild(inputCantidad);
-            fila.appendChild(celdaTipo);
-            fila.appendChild(celdaCantidad);
-            tablaDaños.appendChild(fila);
-        });
-    }
-
-    // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
         descripcionAnomalia.disabled = anomaliaSelect.value === "No";
     });
 
-    // Envío del formulario
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -126,47 +93,44 @@ document.addEventListener("DOMContentLoaded", function () {
         const empaquesDañados = document.getElementById("empaquesDañados")?.value;
         const motivoDaño = document.getElementById("motivoDaño")?.value;
 
-        let referencias = [];
-        let cantidades = [];
-
-        referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
-            const select = item.querySelector("select");
-            const input = item.querySelector("input");
-            if (select && input) {
-                referencias.push(select.value);
-                cantidades.push(input.value);
-            }
-        });
-
         let defectos = {};
         document.querySelectorAll(".input-daños").forEach(input => {
             defectos[input.getAttribute("data-tipo")] = input.value;
         });
 
-        const data = {
-            fecha,
-            operario,
-            referencias,
-            cantidades,
-            empaquesDañados,
-            motivoDaño,
-            defectos,
-            anomalia: anomaliaSelect.value,
-            descripcionAnomalia: descripcionAnomalia.value
-        };
+        let registros = [];
 
-        console.log("Datos a enviar:", data);
+        referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
+            const select = item.querySelector("select");
+            const input = item.querySelector("input");
 
-        fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }).then(() => {
-            mensajeExito.classList.remove("hidden");
-            form.reset();
-            referenciasContainer.innerHTML = "";
-        }).catch(error => console.error("Error:", error));
+            if (select && input) {
+                registros.push({
+                    fecha,
+                    operario,
+                    referencia: select.value,
+                    cantidad: input.value,
+                    empaquesDañados,
+                    motivoDaño,
+                    defectos,
+                    anomalia: anomaliaSelect.value,
+                    descripcionAnomalia: descripcionAnomalia.value
+                });
+            }
+        });
+
+        // Enviar cada registro como una nueva fila en Google Sheets
+        registros.forEach(registro => {
+            fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(registro)
+            }).catch(error => console.error("Error al enviar datos:", error));
+        });
+
+        mensajeExito.classList.remove("hidden");
+        form.reset();
+        referenciasContainer.innerHTML = "";
     });
 });
-

@@ -6,120 +6,166 @@ document.addEventListener("DOMContentLoaded", function () {
     const descripcionAnomalia = document.getElementById("descripcionAnomalia");
     const mensajeExito = document.getElementById("mensajeExito");
 
+    if (!form || !numReferenciasInput || !referenciasContainer || !anomaliaSelect || !descripcionAnomalia || !mensajeExito) {
+        console.error("Faltan elementos en el HTML.");
+        return;
+    }
+
+    // Lista de operarios
+    const operarios = ["Diego Lopez"];
+    const operarioSelect = document.getElementById("operario");
+
+    if (operarioSelect) {
+        operarios.forEach(operario => {
+            const option = document.createElement("option");
+            option.value = operario;
+            option.textContent = operario;
+            operarioSelect.appendChild(option);
+        });
+    } else {
+        console.error("Elemento 'operario' no encontrado.");
+    }
+
     // Lista de referencias disponibles
-    const listaReferencias = [
-        "REF-001",
-        "REF-002",
-        "REF-003",
-        "REF-004",
-        "REF-005"
+    const referenciasLista = [
+        "Panex 2-3 Trans", "Panex 4-6 Trans", "Panex 4-6 Blanco", "Panex 8-10 Trans",
+        "Panex 2-3 Azul", "Panex 4-6 Azul", "Panex 8-10 Azul", "Redondo 2-3 Trans",
+        "Redondo 4-6 Trans", "Redondo 8-10 Trans", "Redondo 2-3 Azul", "Redondo 4-6 Azul",
+        "Redondo 8-10 Azul", "India 2-3", "India 4-6", "India 8-10", "Mazal #18",
+        "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30",
+        "Imusa 3.5 Naranja", "Imusa 7.5 Naranja", "Imusa 4.5 Amarillo", "Imusa 7.0 Blanco",
+        "Imusa 4.5 Blanco", "Imusa Safe Plus 7.0", "Imusa Safe Plus 4.5", "Imusa Española",
+        "Nova 2-3", "Nova 4-6", "Unco 4-6 silicona", "Fusible plano pequeño",
+        "Fusible plano grande", "Fusible PR pequeño suelto", "Fusible PR grande suelto",
+        "Fusible Grande Caucho", "Fusible Pequeño Caucho", "Goma 2-3", "Goma 4-6",
+        "Goma 8-10", "Panex 4-6 Caucho-Negro", "Redondo negro pequeño",
+        "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
-    // URL de Google Apps Script Web App (REEMPLAZAR con tu URL)
-    const scriptURL = "https://script.google.com/macros/s/AKfycbyYJl-3-zMRsJLfA3KJngbPkJQUTDXlcq09pPnHMK6Zp2lXsEBcynRrSLujZFkirU_X/exec";
+    numReferenciasInput.addEventListener("change", function () {
+        referenciasContainer.innerHTML = "";
+        const cantidad = parseInt(numReferenciasInput.value);
 
-    // Mostrar campos de referencia cuando el usuario ingresa el número de referencias
-    numReferenciasInput.addEventListener("input", function () {
-        referenciasContainer.innerHTML = ""; // Limpiar contenido previo
+        if (isNaN(cantidad) || cantidad <= 0) {
+            console.warn("Número de referencias no válido.");
+            return;
+        }
 
-        let numReferencias = parseInt(numReferenciasInput.value);
-        if (numReferencias > 0) {
-            for (let i = 0; i < numReferencias; i++) {
-                let div = document.createElement("div");
+        for (let i = 0; i < cantidad; i++) {
+            const div = document.createElement("div");
+            div.classList.add("referencia-item");
 
-                // Crear el selector de referencia
-                let select = document.createElement("select");
-                select.id = `referencia${i}`;
-                select.required = true;
+            const label = document.createElement("label");
+            label.textContent = Referencia ${i + 1}:;
 
-                let defaultOption = document.createElement("option");
-                defaultOption.value = "";
-                defaultOption.textContent = "Seleccione una referencia";
-                defaultOption.disabled = true;
-                defaultOption.selected = true;
-                select.appendChild(defaultOption);
+            const select = document.createElement("select");
+            select.required = true;
 
-                listaReferencias.forEach(ref => {
-                    let option = document.createElement("option");
-                    option.value = ref;
-                    option.textContent = ref;
-                    select.appendChild(option);
-                });
+            referenciasLista.forEach(ref => {
+                const option = document.createElement("option");
+                option.value = ref;
+                option.textContent = ref;
+                select.appendChild(option);
+            });
 
-                // Crear el input de cantidad
-                let inputCantidad = document.createElement("input");
-                inputCantidad.type = "number";
-                inputCantidad.id = `cantidad${i}`;
-                inputCantidad.min = "1";
-                inputCantidad.required = true;
+            const cantidadInput = document.createElement("input");
+            cantidadInput.type = "number";
+            cantidadInput.min = "1";
+            cantidadInput.required = true;
+            cantidadInput.placeholder = "Cantidad producida";
 
-                div.innerHTML = `<label>Referencia ${i + 1}:</label>`;
-                div.appendChild(select);
-                div.innerHTML += `<label>Cantidad:</label>`;
-                div.appendChild(inputCantidad);
-                
-                referenciasContainer.appendChild(div);
-            }
+            div.appendChild(label);
+            div.appendChild(select);
+            div.appendChild(cantidadInput);
+            referenciasContainer.appendChild(div);
         }
     });
 
-    // Habilitar o deshabilitar descripción de anomalía
+    // Tabla de daños
+    const tablaDaños = document.querySelector("#tabla-daños tbody");
+
+    if (!tablaDaños) {
+        console.error("No se encontró la tabla de daños.");
+    } else {
+        const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
+        tablaDaños.innerHTML = "";
+
+        tiposDeDaño.forEach(tipo => {
+            const fila = document.createElement("tr");
+
+            const celdaTipo = document.createElement("td");
+            celdaTipo.textContent = tipo;
+
+            const celdaCantidad = document.createElement("td");
+            const inputCantidad = document.createElement("input");
+            inputCantidad.type = "number";
+            inputCantidad.min = "0";
+            inputCantidad.value = "0";
+            inputCantidad.style.width = "60px";
+            inputCantidad.classList.add("input-daños");
+            inputCantidad.setAttribute("data-tipo", tipo);
+
+            celdaCantidad.appendChild(inputCantidad);
+            fila.appendChild(celdaTipo);
+            fila.appendChild(celdaCantidad);
+            tablaDaños.appendChild(fila);
+        });
+    }
+
+    // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
         descripcionAnomalia.disabled = anomaliaSelect.value === "No";
     });
 
-    // Enviar datos a Google Sheets
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+    // Envío del formulario
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-        let fecha = document.getElementById("Fecha").value;
-        let operario = document.getElementById("operario").value;
-        let numReferencias = numReferenciasInput.value;
-        let anomalia = anomaliaSelect.value;
-        let descripcion = descripcionAnomalia.value;
+        const fecha = document.getElementById("Fecha")?.value;
+        const operario = document.getElementById("operario")?.value;
+        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
+        const motivoDaño = document.getElementById("motivoDaño")?.value;
 
-        // Capturar datos de las referencias
         let referencias = [];
-        for (let i = 0; i < numReferencias; i++) {
-            let ref = document.getElementById(`referencia${i}`).value;
-            let cant = document.getElementById(`cantidad${i}`).value;
-            referencias.push({ referencia: ref, cantidad: cant });
-        }
+        let cantidades = [];
 
-        // Capturar defectos
-        let defectos = [];
-        let defectosInputs = document.querySelectorAll(".defecto");
-        defectosInputs.forEach((input) => {
-            let tipoDefecto = input.closest("tr").children[0].textContent;
-            let cantidad = input.value;
-            defectos.push({ tipo: tipoDefecto, cantidad: cantidad });
+        referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
+            const select = item.querySelector("select");
+            const input = item.querySelector("input");
+            if (select && input) {
+                referencias.push(select.value);
+                cantidades.push(input.value);
+            }
         });
 
-        // Crear objeto con los datos
-        let data = {
-            fecha: fecha,
-            operario: operario,
-            referencias: JSON.stringify(referencias),
-            defectos: JSON.stringify(defectos),
-            anomalia: anomalia,
-            descripcion: descripcion
+        let defectos = {};
+        document.querySelectorAll(".input-daños").forEach(input => {
+            defectos[input.getAttribute("data-tipo")] = input.value;
+        });
+
+        const data = {
+            fecha,
+            operario,
+            referencias,
+            cantidades,
+            empaquesDañados,
+            motivoDaño,
+            defectos,
+            anomalia: anomaliaSelect.value,
+            descripcionAnomalia: descripcionAnomalia.value
         };
 
-        // Enviar datos a Google Sheets
-        fetch(scriptURL, {
+        console.log("Datos a enviar:", data);
+
+        fetch("https://script.google.com/macros/s/AKfycbyYJl-3-zMRsJLfA3KJngbPkJQUTDXlcq09pPnHMK6Zp2lXsEBcynRrSLujZFkirU_X/exec", {
             method: "POST",
-            body: JSON.stringify(data),
-            headers: { "Content-Type": "application/json" }
-        })
-        .then(response => response.json())
-        .then(response => {
-            console.log("Registro exitoso:", response);
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        }).then(() => {
             mensajeExito.classList.remove("hidden");
             form.reset();
-            referenciasContainer.innerHTML = ""; // Limpiar referencias
-        })
-        .catch(error => {
-            console.error("Error al enviar datos:", error);
-        });
+            referenciasContainer.innerHTML = "";
+        }).catch(error => console.error("Error:", error));
     });
 });

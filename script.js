@@ -119,18 +119,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Enviar cada registro como una nueva fila en Google Sheets
-        registros.forEach(registro => {
-            fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(registro)
-            }).catch(error => console.error("Error al enviar datos:", error));
+        // Enviar cada referencia en una fila independiente
+        Promise.all(
+            registros.map(registro =>
+                fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(registro)
+                }).catch(error => console.error("Error al enviar datos:", error))
+            )
+        ).then(() => {
+            mensajeExito.classList.remove("hidden");
+            form.reset();
+            referenciasContainer.innerHTML = "";
         });
-
-        mensajeExito.classList.remove("hidden");
-        form.reset();
-        referenciasContainer.innerHTML = "";
     });
 });

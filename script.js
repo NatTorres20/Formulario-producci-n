@@ -59,16 +59,18 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const obtenerValor = (id) => {
+        // Función mejorada para obtener valores de input, select y textarea
+        function obtenerValor(id) {
             const elemento = document.getElementById(id);
-            if (!elemento || elemento.value.trim() === "") {
-                console.warn(`⚠️ Campo vacío: ${id}`);
+            if (!elemento) {
+                console.warn(`⚠️ No se encontró el campo: ${id}`);
                 return "Sin dato";
             }
-            return elemento.value.trim();
-        };
+            return elemento.value.trim() || "Sin dato";
+        }
 
-        const fecha = obtenerValor("Fecha");
+        // Capturar correctamente los datos
+        const fecha = new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" });
         const operario = obtenerValor("operario");
         const empaquesDañados = obtenerValor("empaquesDañados");
         const motivoDaño = obtenerValor("motivoDaño");
@@ -98,13 +100,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        console.table(registros); // 📌 Revisión en consola antes de enviar
+        console.log("📌 Registros antes de enviar:");
+        console.table(registros);
 
+        // Enviar cada registro individualmente
         Promise.all(
             registros.map(registro =>
                 fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {
                     method: "POST",
-                    mode: "no-cors",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(registro)
                 }).catch(error => console.error("Error al enviar datos:", error))

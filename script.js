@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+codigo script.js es el siguiente: document.addEventListener("DOMContentLoaded", function () {
      const form = document.getElementById("registroForm");
      const numReferenciasInput = document.getElementById("numReferencias");
      const referenciasContainer = document.getElementById("referenciasContainer");
@@ -168,91 +168,4 @@ document.addEventListener("DOMContentLoaded", function () {
              referenciasContainer.innerHTML = "";
          }).catch(error => console.error("Error:", error));
      });
- });                                 mi codigo para index.html es el siguiente; <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Producción</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        
-        <h2 class="titulo-formulario">REGISTRO DE PRODUCCIÓN CAUCHOS JTORRES</h2>
-
-        
-        <form id="registroForm">
-
-            <label for="Fecha">Fecha:</label>
-            <input type="date" id="Fecha" required>
-            
-            <label for="operario">Nombre del operario:</label>
-            <select id="operario" required>
-                <option value="" disabled selected>Seleccione un operario</option>
-                <option value="Diego Lopez">Diego Lopez </option>
-
-            </select>
-
-
-
-            <label for="numReferencias">¿Cuántas referencias fabricó hoy?</label>
-            <input type="number" id="numReferencias" min="1" required>
-
-            <div id="referenciasContainer"></div>
-
-    
-
-            <h3>Registro de Empaques Dañados</h3>
-<table id="tabla-daños">
-    <thead>
-        <tr>
-            <th>Tipo de Daño</th>
-            <th>Cantidad</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Burbuja</td>
-            <td><input type="number" min="0" value="0"></td>
-        </tr>
-        <tr>
-            <td>Roto</td>
-            <td><input type="number" min="0" value="0"></td>
-        </tr>
-        <tr>
-            <td>Crudo</td>
-            <td><input type="number" min="0" value="0"></td>
-        </tr>
-        <tr>
-            <td>Quemado</td>
-            <td><input type="number" min="0" value="0"></td>
-        </tr>
-        <tr>
-            <td>Otro</td>
-            <td><input type="number" min="0" value="0"></td>
-        </tr>
-    </tbody>
-</table>
-
-
-            
-            
-            <label for="anomalia">¿Hubo alguna anomalía o novedad en la jornada?</label>
-            <select id="anomalia">
-                <option value="No">No</option>
-                <option value="Sí">Sí</option>
-            </select>
-
-            <label for="descripcionAnomalia">Descripción de la anomalía o novedad:</label>
-            <textarea id="descripcionAnomalia" disabled></textarea>
-
-            <button type="submit">Enviar Registro</button>
-        </form>
-
-        <p id="mensajeExito" class="hidden">Gracias DIEGO! Registro enviado con éxito ✅</p>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+ });

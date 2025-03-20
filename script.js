@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Lista de operarios
     const operarios = ["Diego Lopez"];
     const operarioSelect = document.getElementById("operario");
 
@@ -26,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Elemento 'operario' no encontrado.");
     }
 
-    // Lista de referencias disponibles
     const referenciasLista = [
         "Panex 2-3 Trans", "Panex 4-6 Trans", "Panex 4-6 Blanco", "Panex 8-10 Trans",
         "Panex 2-3 Azul", "Panex 4-6 Azul", "Panex 8-10 Azul", "Redondo 2-3 Trans",
@@ -88,14 +86,21 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const fecha = document.getElementById("Fecha")?.value;
-        const operario = document.getElementById("operario")?.value;
-        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
-        const motivoDaño = document.getElementById("motivoDaño")?.value;
+        const obtenerValor = (id) => {
+            const elemento = document.getElementById(id);
+            return elemento && elemento.value ? elemento.value : "Sin dato";
+        };
+
+        const fecha = obtenerValor("Fecha");
+        const operario = obtenerValor("operario");
+        const empaquesDañados = obtenerValor("empaquesDañados");
+        const motivoDaño = obtenerValor("motivoDaño");
+        const anomalia = obtenerValor("anomalia");
+        const descripcionAnomaliaVal = obtenerValor("descripcionAnomalia");
 
         let defectos = {};
         document.querySelectorAll(".input-daños").forEach(input => {
-            defectos[input.getAttribute("data-tipo")] = input.value;
+            defectos[input.getAttribute("data-tipo")] = input.value ? input.value : "Sin dato";
         });
 
         let registros = [];
@@ -105,16 +110,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const input = item.querySelector("input");
 
             if (select && input) {
+                const referencia = select.value || "Sin dato";
+                const cantidad = input.value || "0";
+
                 registros.push({
                     fecha,
                     operario,
-                    referencia: select.value,
-                    cantidad: input.value,
+                    referencia,
+                    cantidad,
                     empaquesDañados,
                     motivoDaño,
                     defectos,
-                    anomalia: anomaliaSelect.value,
-                    descripcionAnomalia: descripcionAnomalia.value
+                    anomalia,
+                    descripcionAnomalia: descripcionAnomaliaVal
                 });
             }
         });

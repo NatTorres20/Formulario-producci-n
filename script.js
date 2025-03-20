@@ -143,18 +143,18 @@ document.addEventListener("DOMContentLoaded", function () {
              defectos[input.getAttribute("data-tipo")] = input.value;
          });
  
-         const data = {
-             fecha,
-             operario,
-             referencias,
-             cantidades,
-             empaquesDañados,
-             motivoDaño,
-             defectos,
-             anomalia: anomaliaSelect.value,
-             descripcionAnomalia: descripcionAnomalia.value
-         };
- 
+referencias.forEach((referencia, index) => {
+    const data = {
+        fecha,
+        operario,
+        referencia,  // Solo una referencia por objeto
+        cantidad: cantidades[index], // Solo la cantidad correspondiente
+        empaquesDañados,
+        motivoDaño,
+        defectos,
+        anomalia: anomaliaSelect.value,
+        descripcionAnomalia: descripcionAnomalia.value
+    };
          console.log("Datos a enviar:", data);
  
          fetch("https://script.google.com/macros/s/AKfycbwOft80WR9nXMP0fR_rVdImlSud0ilj9MPQv0Zjh-EjqGI2tjQctfrCrm0OvtHZGmZN/exec", {

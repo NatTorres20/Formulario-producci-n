@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Datos a enviar:", data);
 
         // Envía los datos a tu Apps Script
-        fetch("https://script.google.com/macros/s/AKfycbwZGlJ2CZlc5wh9NKNM0-5_tZ_FGJKavhqxJY0j3sJApK6nRRDIFLzEbFCTSEHBaY8Y/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbz--0t1SF2_EO7R7EdMEx_y6UnrRgHISQm-ZODkjmWDtVzZNYScVgWo-j1YW3cn8M7r/exec", {
             method: "POST",
             // mode: "no-cors",  <-- Se quita para que se envíe el body correctamente
             headers: { "Content-Type": "application/json" },

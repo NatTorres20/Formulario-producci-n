@@ -134,14 +134,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const input = item.querySelector("input");
             if (select && input) {
                 referencias.push(select.value);
-                cantidades.push(input.value);
+                cantidades.push(parseInt(input.value) || 0);
             }
         });
 
         let defectos = {};
         document.querySelectorAll(".input-daños").forEach(input => {
-            defectos[input.getAttribute("data-tipo")] = input.value;
+            defectos[input.getAttribute("data-tipo")] = parseInt(input.value) || 0;
         });
+
+        console.log("Datos recopilados antes de enviar:");
+        console.log("Referencias:", referencias);
+        console.log("Cantidades:", cantidades);
+        console.log("Defectos:", defectos);
 
         const data = {
             fecha,

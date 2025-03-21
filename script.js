@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30"
     ];
 
-    // Al cambiar la cantidad de referencias, generar campos dinámicos
+    // Cuando cambie el número de referencias, generamos dinámicamente los campos
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
@@ -62,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Tabla de daños
     const tablaDaños = document.querySelector("#tabla-daños tbody");
-
     if (!tablaDaños) {
         console.error("No se encontró la tabla de daños.");
     } else {
@@ -96,17 +95,16 @@ document.addEventListener("DOMContentLoaded", function () {
         descripcionAnomalia.disabled = (anomaliaSelect.value === "No");
     });
 
-    // Envío del formulario
+    // Evento de envío del formulario
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const fecha = document.getElementById("Fecha")?.value;
         const operario = document.getElementById("operario")?.value;
 
+        // Capturar referencias y cantidades
         let referencias = [];
         let cantidades = [];
-
-        // Capturar referencias y cantidades
         referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
             const select = item.querySelector("select");
             const input = item.querySelector("input");
@@ -116,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Captura de defectos asegurando la estructura correcta
+        // Captura de defectos
         let defectos = {
             Burbuja: 0,
             Roto: 0,
@@ -124,45 +122,39 @@ document.addEventListener("DOMContentLoaded", function () {
             Quemado: 0,
             Otro: 0
         };
-
         document.querySelectorAll(".input-daños").forEach(input => {
             const tipo = input.getAttribute("data-tipo");
             defectos[tipo] = parseInt(input.value, 10) || 0;
         });
 
-        console.log("Defectos capturados:", defectos);
-
-        // Construimos el objeto de datos
+        // Construimos el objeto data
         const data = {
             fecha,
             operario,
             referencias,
             cantidades,
-            // En tu hoja de cálculo ya no se usan empaquesDañados ni motivoDaño,
-            // así que no los incluimos si no son necesarios.
-            defectos, // Se envía como objeto con las claves Burbuja, Roto, etc.
+            defectos, // Objeto con {Burbuja, Roto, Crudo, Quemado, Otro}
             anomalia: anomaliaSelect.value,
             descripcionAnomalia: descripcionAnomalia.value
         };
 
         console.log("Datos a enviar:", data);
 
-        // Envía los datos a tu Apps Script
-        fetch("https://script.google.com/macros/s/AKfycbz--0t1SF2_EO7R7EdMEx_y6UnrRgHISQm-ZODkjmWDtVzZNYScVgWo-j1YW3cn8M7r/exec", {
+        // IMPORTANTE: No uses mode: "no-cors"
+        fetch("https://script.google.com/macros/s/AKfycbxy4U2jtfp3yUB6TCsmCYe5L0-bTvj305CJokqVsbm1QRvAwJv9gUBy0r9igSdeGmVk/exec", {
             method: "POST",
-            // mode: "no-cors",  <-- Se quita para que se envíe el body correctamente
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         })
         .then(async response => {
+            // Podemos intentar parsear la respuesta si es JSON
             try {
-                // Al quitar no-cors, puedes leer la respuesta
                 const respData = await response.json();
                 console.log("Respuesta del servidor:", respData);
             } catch (error) {
-                // Si la respuesta no es JSON o hay algún error
                 console.warn("No se pudo parsear la respuesta como JSON:", error);
             }
+            // Mostrar mensaje de éxito
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
@@ -170,4 +162,3 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Error:", error));
     });
 });
-

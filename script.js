@@ -11,16 +11,37 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    // Lista de operarios
+    const operarios = ["Diego Lopez"];
+    const operarioSelect = document.getElementById("operario");
+
+    if (operarioSelect) {
+        operarios.forEach(operario => {
+            const option = document.createElement("option");
+            option.value = operario;
+            option.textContent = operario;
+            operarioSelect.appendChild(option);
+        });
+    } else {
+        console.error("Elemento 'operario' no encontrado.");
+    }
+
     // Lista de referencias disponibles
     const referenciasLista = [
         "Panex 2-3 Trans", "Panex 4-6 Trans", "Panex 4-6 Blanco", "Panex 8-10 Trans",
         "Panex 2-3 Azul", "Panex 4-6 Azul", "Panex 8-10 Azul", "Redondo 2-3 Trans",
         "Redondo 4-6 Trans", "Redondo 8-10 Trans", "Redondo 2-3 Azul", "Redondo 4-6 Azul",
         "Redondo 8-10 Azul", "India 2-3", "India 4-6", "India 8-10", "Mazal #18",
-        "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30"
+        "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30",
+        "Imusa 3.5 Naranja", "Imusa 7.5 Naranja", "Imusa 4.5 Amarillo", "Imusa 7.0 Blanco",
+        "Imusa 4.5 Blanco", "Imusa Safe Plus 7.0", "Imusa Safe Plus 4.5", "Imusa Española",
+        "Nova 2-3", "Nova 4-6", "Unco 4-6 silicona", "Fusible plano pequeño",
+        "Fusible plano grande", "Fusible PR pequeño suelto", "Fusible PR grande suelto",
+        "Fusible Grande Caucho", "Fusible Pequeño Caucho", "Goma 2-3", "Goma 4-6",
+        "Goma 8-10", "Panex 4-6 Caucho-Negro", "Redondo negro pequeño",
+        "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
-    // Cuando cambie el número de referencias, generamos dinámicamente los campos
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
@@ -62,6 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Tabla de daños
     const tablaDaños = document.querySelector("#tabla-daños tbody");
+
     if (!tablaDaños) {
         console.error("No se encontró la tabla de daños.");
     } else {
@@ -92,73 +114,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
-        descripcionAnomalia.disabled = (anomaliaSelect.value === "No");
+        descripcionAnomalia.disabled = anomaliaSelect.value === "No";
     });
 
-    // Evento de envío del formulario
+    // Envío del formulario
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const fecha = document.getElementById("Fecha")?.value;
         const operario = document.getElementById("operario")?.value;
+        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
+        const motivoDaño = document.getElementById("motivoDaño")?.value;
 
-        // Capturar referencias y cantidades
         let referencias = [];
         let cantidades = [];
+
         referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
             const select = item.querySelector("select");
             const input = item.querySelector("input");
             if (select && input) {
                 referencias.push(select.value);
-                cantidades.push(parseInt(input.value, 10) || 0);
+                cantidades.push(input.value);
             }
         });
 
-        // Captura de defectos
-        let defectos = {
-            Burbuja: 0,
-            Roto: 0,
-            Crudo: 0,
-            Quemado: 0,
-            Otro: 0
-        };
+        let defectos = {};
         document.querySelectorAll(".input-daños").forEach(input => {
-            const tipo = input.getAttribute("data-tipo");
-            defectos[tipo] = parseInt(input.value, 10) || 0;
+            defectos[input.getAttribute("data-tipo")] = input.value;
         });
 
-        // Construimos el objeto data
         const data = {
             fecha,
             operario,
             referencias,
             cantidades,
-            defectos, // Objeto con {Burbuja, Roto, Crudo, Quemado, Otro}
+            empaquesDañados,
+            motivoDaño,
+            defectos,
             anomalia: anomaliaSelect.value,
             descripcionAnomalia: descripcionAnomalia.value
         };
 
         console.log("Datos a enviar:", data);
 
-        // IMPORTANTE: No uses mode: "no-cors"
-        fetch("https://script.google.com/macros/s/AKfycbxDg3bOZMKg-tuRq7uGuzHqfL5ie8Jva_OCfniR1cvgaoQKdpPis5v2sN3Im8WsBowP/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbx-HKd-pHjBTah64GuUEifQwReHLFjO0TA7WAqgGOY0Hf-__CvFuYiKGqrclYv1ttoL/exec", {
             method: "POST",
+            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
-        })
-        .then(async response => {
-            // Podemos intentar parsear la respuesta si es JSON
-            try {
-                const respData = await response.json();
-                console.log("Respuesta del servidor:", respData);
-            } catch (error) {
-                console.warn("No se pudo parsear la respuesta como JSON:", error);
-            }
-            // Mostrar mensaje de éxito
+        }).then(() => {
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-        })
-        .catch(error => console.error("Error:", error));
+        }).catch(error => console.error("Error:", error));
     });
 });

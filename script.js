@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30"
     ];
 
+    // Al cambiar la cantidad de referencias, generar campos dinámicos
     numReferenciasInput.addEventListener("change", function () {
         referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
@@ -92,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Habilita o deshabilita la descripción de anomalía
     anomaliaSelect.addEventListener("change", function () {
-        descripcionAnomalia.disabled = anomaliaSelect.value === "No";
+        descripcionAnomalia.disabled = (anomaliaSelect.value === "No");
     });
 
     // Envío del formulario
@@ -101,12 +102,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const fecha = document.getElementById("Fecha")?.value;
         const operario = document.getElementById("operario")?.value;
-        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
-        const motivoDaño = document.getElementById("motivoDaño")?.value;
 
         let referencias = [];
         let cantidades = [];
 
+        // Capturar referencias y cantidades
         referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
             const select = item.querySelector("select");
             const input = item.querySelector("input");
@@ -132,35 +132,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Defectos capturados:", defectos);
 
+        // Construimos el objeto de datos
         const data = {
             fecha,
             operario,
             referencias,
             cantidades,
-            empaquesDañados,
-            motivoDaño,
-            defectos: [
-                defectos.Burbuja,
-                defectos.Roto,
-                defectos.Crudo,
-                defectos.Quemado,
-                defectos.Otro
-            ],
+            // En tu hoja de cálculo ya no se usan empaquesDañados ni motivoDaño,
+            // así que no los incluimos si no son necesarios.
+            defectos, // Se envía como objeto con las claves Burbuja, Roto, etc.
             anomalia: anomaliaSelect.value,
             descripcionAnomalia: descripcionAnomalia.value
         };
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbzDYMJ7qYDudQLB2G23ovxmz3ebhYy8ReNm0aJTYJY0YVr-iikeprB2wWiawnU030cd/exec", {
+        // Envía los datos a tu Apps Script
+        fetch("https://script.google.com/macros/s/AKfycbwZGlJ2CZlc5wh9NKNM0-5_tZ_FGJKavhqxJY0j3sJApK6nRRDIFLzEbFCTSEHBaY8Y/exec", {
             method: "POST",
-            mode: "no-cors",
+            // mode: "no-cors",  <-- Se quita para que se envíe el body correctamente
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
-        }).then(() => {
+        })
+        .then(async response => {
+            try {
+                // Al quitar no-cors, puedes leer la respuesta
+                const respData = await response.json();
+                console.log("Respuesta del servidor:", respData);
+            } catch (error) {
+                // Si la respuesta no es JSON o hay algún error
+                console.warn("No se pudo parsear la respuesta como JSON:", error);
+            }
             mensajeExito.classList.remove("hidden");
             form.reset();
             referenciasContainer.innerHTML = "";
-        }).catch(error => console.error("Error:", error));
+        })
+        .catch(error => console.error("Error:", error));
     });
 });
+

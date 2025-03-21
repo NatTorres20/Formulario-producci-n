@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Lista de operarios
     const operarios = ["Diego Lopez"];
     const operarioSelect = document.getElementById("operario");
 
@@ -26,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Elemento 'operario' no encontrado.");
     }
 
-    // Lista de referencias disponibles
     const referenciasLista = [
         "Panex 2-3 Trans", "Panex 4-6 Trans", "Panex 4-6 Blanco", "Panex 8-10 Trans",
         "Panex 2-3 Azul", "Panex 4-6 Azul", "Panex 8-10 Azul", "Redondo 2-3 Trans",
@@ -81,18 +79,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Tabla de daños
     const tablaDaños = document.querySelector("#tabla-daños tbody");
 
-    if (!tablaDaños) {
-        console.error("No se encontró la tabla de daños.");
-    } else {
+    if (tablaDaños) {
         const tiposDeDaño = ["Burbuja", "Roto", "Crudo", "Quemado", "Otro"];
         tablaDaños.innerHTML = "";
 
         tiposDeDaño.forEach(tipo => {
             const fila = document.createElement("tr");
-
+            
             const celdaTipo = document.createElement("td");
             celdaTipo.textContent = tipo;
 
@@ -110,52 +105,29 @@ document.addEventListener("DOMContentLoaded", function () {
             fila.appendChild(celdaCantidad);
             tablaDaños.appendChild(fila);
         });
+    } else {
+        console.error("No se encontró la tabla de daños.");
     }
 
-    // Habilita o deshabilita la descripción de anomalía
-    anomaliaSelect.addEventListener("change", function () {
-        descripcionAnomalia.disabled = anomaliaSelect.value === "No";
-    });
-
-    // Envío del formulario
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const fecha = document.getElementById("Fecha")?.value;
-        const operario = document.getElementById("operario")?.value;
-        const empaquesDañados = document.getElementById("empaquesDañados")?.value;
-        const motivoDaño = document.getElementById("motivoDaño")?.value;
-
-        let referencias = [];
-        let cantidades = [];
-
-        referenciasContainer.querySelectorAll(".referencia-item").forEach(item => {
-            const select = item.querySelector("select");
-            const input = item.querySelector("input");
-            if (select && input) {
-                referencias.push(select.value);
-                cantidades.push(input.value);
-            }
-        });
-
         let defectos = {};
         document.querySelectorAll(".input-daños").forEach(input => {
-            defectos[input.getAttribute("data-tipo")] = input.value;
+            defectos[input.getAttribute("data-tipo")] = parseInt(input.value) || 0;
         });
 
         const data = {
-            fecha,
-            operario,
-            referencias,
-            cantidades,
-            empaquesDañados,
-            motivoDaño,
-            defectos,
+            fecha: document.getElementById("Fecha")?.value,
+            operario: document.getElementById("operario")?.value,
+            referencias: Array.from(document.querySelectorAll(".referencia-item select"), select => select.value),
+            cantidades: Array.from(document.querySelectorAll(".referencia-item input"), input => input.value),
+            empaquesDañados: document.getElementById("empaquesDañados")?.value,
+            motivoDaño: document.getElementById("motivoDaño")?.value,
+            defectos: defectos,
             anomalia: anomaliaSelect.value,
             descripcionAnomalia: descripcionAnomalia.value
         };
-
-        console.log("Datos a enviar:", data);
 
         fetch("https://script.google.com/macros/s/AKfycbyQq9jnnhuXNhr0hpLLRYjYKwT0w52StxypAENJbcWUwgADoy2rwTz9dlFC6vez3dQU/exec", {
             method: "POST",

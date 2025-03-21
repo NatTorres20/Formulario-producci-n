@@ -11,35 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Lista de operarios
-    const operarios = ["Diego Lopez"];
-    const operarioSelect = document.getElementById("operario");
-
-    if (operarioSelect) {
-        operarios.forEach(operario => {
-            const option = document.createElement("option");
-            option.value = operario;
-            option.textContent = operario;
-            operarioSelect.appendChild(option);
-        });
-    } else {
-        console.error("Elemento 'operario' no encontrado.");
-    }
-
     // Lista de referencias disponibles
     const referenciasLista = [
         "Panex 2-3 Trans", "Panex 4-6 Trans", "Panex 4-6 Blanco", "Panex 8-10 Trans",
         "Panex 2-3 Azul", "Panex 4-6 Azul", "Panex 8-10 Azul", "Redondo 2-3 Trans",
         "Redondo 4-6 Trans", "Redondo 8-10 Trans", "Redondo 2-3 Azul", "Redondo 4-6 Azul",
         "Redondo 8-10 Azul", "India 2-3", "India 4-6", "India 8-10", "Mazal #18",
-        "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30",
-        "Imusa 3.5 Naranja", "Imusa 7.5 Naranja", "Imusa 4.5 Amarillo", "Imusa 7.0 Blanco",
-        "Imusa 4.5 Blanco", "Imusa Safe Plus 7.0", "Imusa Safe Plus 4.5", "Imusa Española",
-        "Nova 2-3", "Nova 4-6", "Unco 4-6 silicona", "Fusible plano pequeño",
-        "Fusible plano grande", "Fusible PR pequeño suelto", "Fusible PR grande suelto",
-        "Fusible Grande Caucho", "Fusible Pequeño Caucho", "Goma 2-3", "Goma 4-6",
-        "Goma 8-10", "Panex 4-6 Caucho-Negro", "Redondo negro pequeño",
-        "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
+        "Mazal #20", "Mazal #22", "Mazal #24", "Mazal #26", "Mazal #28", "Mazal #30"
     ];
 
     numReferenciasInput.addEventListener("change", function () {
@@ -134,19 +112,25 @@ document.addEventListener("DOMContentLoaded", function () {
             const input = item.querySelector("input");
             if (select && input) {
                 referencias.push(select.value);
-                cantidades.push(parseInt(input.value) || 0);
+                cantidades.push(parseInt(input.value, 10) || 0);
             }
         });
 
-        let defectos = {};
+        // Captura de defectos asegurando la estructura correcta
+        let defectos = {
+            Burbuja: 0,
+            Roto: 0,
+            Crudo: 0,
+            Quemado: 0,
+            Otro: 0
+        };
+
         document.querySelectorAll(".input-daños").forEach(input => {
-            defectos[input.getAttribute("data-tipo")] = parseInt(input.value) || 0;
+            const tipo = input.getAttribute("data-tipo");
+            defectos[tipo] = parseInt(input.value, 10) || 0;
         });
 
-        console.log("Datos recopilados antes de enviar:");
-        console.log("Referencias:", referencias);
-        console.log("Cantidades:", cantidades);
-        console.log("Defectos:", defectos);
+        console.log("Defectos capturados:", defectos);
 
         const data = {
             fecha,
@@ -155,7 +139,13 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidades,
             empaquesDañados,
             motivoDaño,
-            defectos,
+            defectos: [
+                defectos.Burbuja,
+                defectos.Roto,
+                defectos.Crudo,
+                defectos.Quemado,
+                defectos.Otro
+            ],
             anomalia: anomaliaSelect.value,
             descripcionAnomalia: descripcionAnomalia.value
         };

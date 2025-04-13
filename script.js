@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             div.classList.add("referencia-item");
 
             const label = document.createElement("label");
-            label.textContent = `Referencia ${i + 1}:`;
+            label.textContent = Referencia ${i + 1}:;
 
             const select = document.createElement("select");
             select.required = true;
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycby3r7N79XiQTRTrSpxVIPDPMazYFeUjU7NNc_-qC_XM57Nr9TlqaNAlSC-y1iICegeO/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbzuNs60fefoa3CDz8R4RwI75Wv8Lfg88sLUmHU7RFZXr-yOijVbrBGI79ewIn1uhPGy/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },

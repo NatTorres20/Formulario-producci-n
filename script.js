@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbwu9_3SBPa179Vr_3DfdtGxIh3Tb6uYgPTv6IPlWzK1hAvPAE9wcD9doCJOMjMQSCvf/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbx9DL3jXyCYJY9IxiT18WGd0bVsn1enDlm-L3cTJeDx1CSfRwH1YnbS8wd21y2Kf_0R/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },

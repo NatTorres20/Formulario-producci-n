@@ -42,21 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
+       // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
-        referenciasContainer.innerHTML = "";
-        const cantidad = parseInt(numReferenciasInput.value);
+        referenciasContainer.innerHTML = ""; // Limpia el contenedor antes de agregar nuevos elementos
 
-        if (isNaN(cantidad) || cantidad <= 0) {
-            console.warn("Número de referencias no válido.");
-            return;
-        }
+        const cantidad = parseInt(numReferenciasInput.value);
+        if (isNaN(cantidad) || cantidad <= 0) return;
 
         for (let i = 0; i < cantidad; i++) {
-            const div = document.createElement("div");
-            div.classList.add("referencia-item");
-
             const label = document.createElement("label");
-            label.textContent = Referencia {i + 1}:;
+            label.textContent = `Referencia ${i + 1}:`;
 
             const select = document.createElement("select");
             select.required = true;
@@ -74,12 +69,12 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidadInput.required = true;
             cantidadInput.placeholder = "Cantidad producida";
 
-            div.appendChild(label);
-            div.appendChild(select);
-            div.appendChild(cantidadInput);
-            referenciasContainer.appendChild(div);
+            referenciasContainer.appendChild(label);
+            referenciasContainer.appendChild(select);
+            referenciasContainer.appendChild(cantidadInput);
         }
     });
+
 
     // Tabla de daños
     const tablaDaños = document.querySelector("#tabla-daños tbody");

@@ -42,16 +42,21 @@ document.addEventListener("DOMContentLoaded", function () {
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
-      // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
-        referenciasContainer.innerHTML = ""; // Limpia el contenedor antes de agregar nuevos elementos
-
+        referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
-        if (isNaN(cantidad) || cantidad <= 0) return;
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            console.warn("Número de referencias no válido.");
+            return;
+        }
 
         for (let i = 0; i < cantidad; i++) {
+            const div = document.createElement("div");
+            div.classList.add("referencia-item");
+
             const label = document.createElement("label");
-            label.textContent = `Referencia ${i + 1}:`;
+            label.textContent = Referencia ${i + 1}:;
 
             const select = document.createElement("select");
             select.required = true;
@@ -69,12 +74,12 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidadInput.required = true;
             cantidadInput.placeholder = "Cantidad producida";
 
-            referenciasContainer.appendChild(label);
-            referenciasContainer.appendChild(select);
-            referenciasContainer.appendChild(cantidadInput);
+            div.appendChild(label);
+            div.appendChild(select);
+            div.appendChild(cantidadInput);
+            referenciasContainer.appendChild(div);
         }
     });
-
 
     // Tabla de daños
     const tablaDaños = document.querySelector("#tabla-daños tbody");
@@ -152,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbzG-6szDPEtg9nUmDcyIJmNd5OKL1qYezhIYTf5bkcvYJ-QoN1cGt83sr90p-YZaFwV/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbwoTOXUb1mhU8RO67wTa4fRtc27eY_lCsWq7IrKfj66YHZE9xA3EtqVfUyE0fEuXkYQ/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
@@ -164,5 +169,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }).catch(error => console.error("Error:", error));
     });
 });
-
-

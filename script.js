@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             div.classList.add("referencia-item");
 
             const label = document.createElement("label");
-            label.textContent = Referencia ${i + 1}:;
+            label.textContent = `Referencia ${i + 1}:`;
 
             const select = document.createElement("select");
             select.required = true;

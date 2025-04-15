@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbzNKjtraDe4WxQYsQduSqLqwq9_nNfv-eeiEupDuZrHUjBT6bZYixiJf02lQHS_utId/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbysOrgFeOTwvph1BZntN-CU021kjTB7aQX27H-qbHJKo2dx15s0H9ZbEbhS_hLsZrPF/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
@@ -169,3 +169,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }).catch(error => console.error("Error:", error));
     });
 });
+
+

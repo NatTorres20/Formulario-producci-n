@@ -42,16 +42,21 @@ document.addEventListener("DOMContentLoaded", function () {
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
-   // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
-        referenciasContainer.innerHTML = ""; // Limpia el contenedor antes de agregar nuevos elementos
-
+        referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
-        if (isNaN(cantidad) || cantidad <= 0) return;
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            console.warn("Número de referencias no válido.");
+            return;
+        }
 
         for (let i = 0; i < cantidad; i++) {
+            const div = document.createElement("div");
+            div.classList.add("referencia-item");
+
             const label = document.createElement("label");
-            label.textContent = `Referencia ${i + 1}:`;
+            label.textContent = Referencia ${i + 1}:;
 
             const select = document.createElement("select");
             select.required = true;
@@ -69,9 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidadInput.required = true;
             cantidadInput.placeholder = "Cantidad producida";
 
-            referenciasContainer.appendChild(label);
-            referenciasContainer.appendChild(select);
-            referenciasContainer.appendChild(cantidadInput);
+            div.appendChild(label);
+            div.appendChild(select);
+            div.appendChild(cantidadInput);
+            referenciasContainer.appendChild(div);
         }
     });
 
@@ -137,26 +143,29 @@ document.addEventListener("DOMContentLoaded", function () {
             defectos[input.getAttribute("data-tipo")] = input.value;
         });
 
-referencias.forEach((referencia, index) => {
-    const data = {
-        fecha,
-        operario,
-        referencia,  // Solo una referencia por objeto
-        cantidad: cantidades[index], // Solo la cantidad correspondiente
-        empaquesDañados,
-        motivoDaño,
-        defectos,
-        anomalia: anomaliaSelect.value,
-        descripcionAnomalia: descripcionAnomalia.value
-    };
+        const data = {
+            fecha,
+            operario,
+            referencias,
+            cantidades,
+            empaquesDañados,
+            motivoDaño,
+            defectos,
+            anomalia: anomaliaSelect.value,
+            descripcionAnomalia: descripcionAnomalia.value
+        };
 
-    console.log("Datos a enviar:", data);
+        console.log("Datos a enviar:", data);
 
-    fetch("https://script.google.com/macros/s/AKfycbxbOeMMiFr7zA_XuQVdihjyBoiK3RyCMTrJhJHTesuyBTqUtVMe9_4w_IHU3tdeVRqQ/exec
-", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    }).catch(error => console.error("Error:", error));
+        fetch("https://script.google.com/macros/s/AKfycbzNKjtraDe4WxQYsQduSqLqwq9_nNfv-eeiEupDuZrHUjBT6bZYixiJf02lQHS_utId/exec", {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        }).then(() => {
+            mensajeExito.classList.remove("hidden");
+            form.reset();
+            referenciasContainer.innerHTML = "";
+        }).catch(error => console.error("Error:", error));
+    });
 });

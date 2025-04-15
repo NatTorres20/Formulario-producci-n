@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             div.classList.add("referencia-item");
 
             const label = document.createElement("label");
-            label.textContent = `Referencia ${i + 1}:`;
+            label.textContent = Referencia ${i + 1}:;
 
             const select = document.createElement("select");
             select.required = true;
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbwOlpgwT4JklgYOeP-e1ByJ7P8s9kgD_AyI-oCx4y-60hygul1TotUMqLt5MnxId9Fr/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbx-HKd-pHjBTah64GuUEifQwReHLFjO0TA7WAqgGOY0Hf-__CvFuYiKGqrclYv1ttoL/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
@@ -169,3 +169,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }).catch(error => console.error("Error:", error));
     });
 });
+
+

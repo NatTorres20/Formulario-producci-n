@@ -137,29 +137,26 @@ document.addEventListener("DOMContentLoaded", function () {
             defectos[input.getAttribute("data-tipo")] = input.value;
         });
 
-        const data = {
-            fecha,
-            operario,
-            referencias,
-            cantidades,
-            empaquesDañados,
-            motivoDaño,
-            defectos,
-            anomalia: anomaliaSelect.value,
-            descripcionAnomalia: descripcionAnomalia.value
-        };
+referencias.forEach((referencia, index) => {
+    const data = {
+        fecha,
+        operario,
+        referencia,  // Solo una referencia por objeto
+        cantidad: cantidades[index], // Solo la cantidad correspondiente
+        empaquesDañados,
+        motivoDaño,
+        defectos,
+        anomalia: anomaliaSelect.value,
+        descripcionAnomalia: descripcionAnomalia.value
+    };
 
-        console.log("Datos a enviar:", data);
+    console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbxqy1hel2kY8RLAhbnwktGAQT3g7l8ar8QpYYSBxPF5HBXx_hjHm4edoNIDXAKff9WO/exec", {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }).then(() => {
-            mensajeExito.classList.remove("hidden");
-            form.reset();
-            referenciasContainer.innerHTML = "";
-        }).catch(error => console.error("Error:", error));
-    });
+    fetch("https://script.google.com/macros/s/AKfycbxbOeMMiFr7zA_XuQVdihjyBoiK3RyCMTrJhJHTesuyBTqUtVMe9_4w_IHU3tdeVRqQ/exec
+", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    }).catch(error => console.error("Error:", error));
 });

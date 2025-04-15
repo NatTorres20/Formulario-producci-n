@@ -42,14 +42,19 @@ document.addEventListener("DOMContentLoaded", function () {
         "Empaque Cuadrado Challenger", "Empaque redondo Challenger"
     ];
 
-  // Genera la lista de referencias y cantidades según el número seleccionado
     numReferenciasInput.addEventListener("change", function () {
-        referenciasContainer.innerHTML = ""; // Limpia el contenedor antes de agregar nuevos elementos
-
+        referenciasContainer.innerHTML = "";
         const cantidad = parseInt(numReferenciasInput.value);
-        if (isNaN(cantidad) || cantidad <= 0) return;
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            console.warn("Número de referencias no válido.");
+            return;
+        }
 
         for (let i = 0; i < cantidad; i++) {
+            const div = document.createElement("div");
+            div.classList.add("referencia-item");
+
             const label = document.createElement("label");
             label.textContent = `Referencia ${i + 1}:`;
 
@@ -69,9 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             cantidadInput.required = true;
             cantidadInput.placeholder = "Cantidad producida";
 
-            referenciasContainer.appendChild(label);
-            referenciasContainer.appendChild(select);
-            referenciasContainer.appendChild(cantidadInput);
+            div.appendChild(label);
+            div.appendChild(select);
+            div.appendChild(cantidadInput);
+            referenciasContainer.appendChild(div);
         }
     });
 
@@ -151,8 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Datos a enviar:", data);
 
-        fetch("https://script.google.com/macros/s/AKfycbyeOga17LWfwGXwRDLALhNTnemPXaZhVV1kwoVVHuf4B-4mrg3M8YTU5YtwnJou1t7T/exec
-", {
+        fetch("https://script.google.com/macros/s/AKfycbx-HKd-pHjBTah64GuUEifQwReHLFjO0TA7WAqgGOY0Hf-__CvFuYiKGqrclYv1ttoL/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
